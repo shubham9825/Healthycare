@@ -1,0 +1,27 @@
+{
+  "parser": "@babel/eslint-parser",
+  "extends": "airbnb-base",
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "linebreak-style": 0,
+    "indent": "off",
+    "no-unused-vars": "off"
+  },
+  "plugins": [
+    "react"
+  ],
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "babelrc": false,
+      "configFile": false,
+      "parserOpts": {
+        "plugins": [
+          "jsx"
+        ]
+      }
+    }
+  }
+}
