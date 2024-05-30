@@ -4,7 +4,7 @@ const path = require("path");
 const fs = require("fs");
 require("dotenv").config({ path: "./env.env" });
 
-const { connectDb, getDbEmployee, addDbEmployee, getTotal, deleteDbEmployee, searchDbEmployee, editDbEmployee, getDbRetirment, searchDbRetirement } = require("./db");
+const { connectDb, getDbEmployee, addDbEmployee, getTotal } = require("./db");
 
 const { ApolloServer } = require("apollo-server-express");
 
@@ -15,50 +15,18 @@ function getEmployeeRecord() {
     return getDbEmployee();
 }
 
-function getRetirementList() {
-    return getDbRetirment();
-}
-
 async function addEmployee(_, { employee }) {
     employee.id = await getTotal("Employee");
     await addDbEmployee(employee);
     return employee;
 }
 
-function deleteEmployee(_, { id }) {
-    return deleteDbEmployee(id);
-}
-
-function searchEmployee(_, { firstname }) {
-    return searchDbEmployee(firstname);
-}
-
-function searchRetirmentList(_, { employeeType }) {
-    return searchDbRetirement(employeeType);
-}
-
-async function editEmployee(_, { id, employee }) {
-    try {
-        const updatedEmployee = await editDbEmployee(id, employee);
-        return updatedEmployee;
-    } catch (error) {
-        console.error('Error editing employee:', error);
-        throw error;
-    }
-}
-
 const myres = {
     Query: {
-        employeeList: getEmployeeRecord,
-        retirementList: getRetirementList,
-        searchEmployee,
-        searchRetirmentList
-
+        employeeList: getEmployeeRecord
     },
     Mutation: {
         addEmployee,
-        deleteEmployee,
-        editEmployee
     },
 };
 

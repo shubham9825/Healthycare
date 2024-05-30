@@ -23,22 +23,12 @@ input employeeData {
   currentStatus:Int
 }
 
-type DeleteEmployee {
-  success: Boolean!
-  message: String
-}
-
 type Query {
   employeeList: [employeeDetails!]!
-  retirementList:[employeeDetails!]!
-  searchEmployee(firstname: String): [employeeDetails!]!
-  searchRetirmentList(employeeType: String): [employeeDetails!]!
 }
 
 type Mutation {
   addEmployee(employee : employeeData!) : employeeDetails!,
-  deleteEmployee(id: ID!): DeleteEmployee
-  editEmployee(id: Int!, employee: employeeData!): employeeDetails!
 }
 
  
