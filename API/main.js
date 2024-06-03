@@ -1,47 +1,33 @@
-const express = require("express");
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import bodyParser from 'body-parser';
+import typeDefs  from './graphql/schema.js';
+import  resolvers  from './graphql/resolver.js'; 
+import connectDB from './db.js';
+import dotenv from 'dotenv';
+dotenv.config({path: './env.env'})
 const app = express();
-const path = require("path");
-const fs = require("fs");
-require("dotenv").config({ path: "./env.env" });
 
-const { connectDb, getDbEmployee, addDbEmployee, getTotal } = require("./db");
+//Middelware to parse the Json bodies.
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
 
-const { ApolloServer } = require("apollo-server-express");
 
-// graphql schema
-const userSchema = fs.readFileSync("./graphqlSchema", "utf-8");
+connectDB();
 
-function getEmployeeRecord() {
-    return getDbEmployee();
+//Apollo Server
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
+
+  async function startApolloServer() {
+    await server.start();
+    server.applyMiddleware({ app });
 }
 
-async function addEmployee(_, { employee }) {
-    employee.id = await getTotal("Employee");
-    await addDbEmployee(employee);
-    return employee;
-}
-
-const myres = {
-    Query: {
-        employeeList: getEmployeeRecord
-    },
-    Mutation: {
-        addEmployee,
-    },
-};
-
-// getting api port from env file
-const appPort = process.env.API_PORT;
-const server = new ApolloServer({ typeDefs: userSchema, resolvers: myres });
-
-// stating the server
-server.start().then((res) => {
-    let Cors = false;
-    // handle cors
-    server.applyMiddleware({ app, path: "/graphql", Cors });
-    app.listen(appPort, () => {
-        console.log(`server started at port: ${appPort}`);
-        connectDb();
-    });
+const PORT = process.env.API_PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Api Server is Running On ${PORT}`);
 });
 
