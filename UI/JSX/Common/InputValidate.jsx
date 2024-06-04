@@ -1,31 +1,26 @@
 import React from 'react';
-import { Form } from 'react-bootstrap';
+import { FormGroup, Input, InputGroup } from 'reactstrap';
 
-// common component for input field 
-class InputValidate extends React.Component {
-    render() {
-        const { name, placeholder, error, type, value, onChange, label } = this.props;
-
-        return (
-            <>
-                <Form.Group className="mb-3">
-                    <Form.Label>{label}</Form.Label>
-                    <Form.Control
+export const InputValidate = ({ name, placeholder, error, type, value, onChange, disabled }) => {
+    return (
+        <>
+            <FormGroup>
+                <InputGroup>
+                    <Input
                         type={type || 'text'}
                         name={name}
                         placeholder={placeholder || name}
                         value={value || ''}
-                        {...{ onChange }}
-                        isInvalid={!!error}
+                        {...{ onChange, disabled }}
+                        invalid={!!error}
                     />
+                </InputGroup>
+                {error && (
+                    <div className="text-danger mt-1">{error}</div>
+                )}
+            </FormGroup>
+        </>
+    );
+};
 
-                    <Form.Control.Feedback type="invalid">
-                        {error}
-                    </Form.Control.Feedback>
-                </Form.Group>
-            </>
-        );
-    }
-}
 
-export default InputValidate;
