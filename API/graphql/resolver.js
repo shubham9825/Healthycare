@@ -7,10 +7,16 @@ const resolvers = {
     signup: async (_, { username, email, password }) => {
       try {
         // Check if user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-          throw new Error('User already exists');
+        const existingUserByUsername = await User.findOne({ username });
+        if (existingUserByUsername) {
+          throw new Error('Username already exists');
         }
+
+        const existingUserByEmail = await User.findOne({ email });
+        if (existingUserByEmail) {
+          throw new Error('Email already exists');
+        }
+
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
