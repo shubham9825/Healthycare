@@ -28,9 +28,9 @@ const resolvers = {
         // Generate JWT token
         const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET);
 
-        return { token, user: newUser };
+        return { token, user: newUser};
       } catch (error) {
-        throw new Error('Signup failed');
+        throw error;
       }
     },
     login: async (_, { email, password }) => {
@@ -52,7 +52,7 @@ const resolvers = {
 
         return { token, user };
       } catch (error) {
-        throw new Error('Login failed');
+        throw error;
       }
     },
   },
