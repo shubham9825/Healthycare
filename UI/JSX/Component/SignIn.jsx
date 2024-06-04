@@ -11,6 +11,7 @@ import { LoginValidation } from "./LoginValidation.js";
 import { InputValidate } from "../Common/InputValidate.jsx";
 import { CustomButton } from "../Common/CustomButton.jsx";
 import { Link } from 'react-router-dom';
+import { SIGN_IN } from "../Common/Schema.jsx";
 
 
 const initialState = {
@@ -52,11 +53,18 @@ const SignIn = () => {
 
         if (!emailError && !passwordError) {
             setLoading(true);
-
-            // Simulate a login API call
-            setTimeout(() => {
+            try {
+                const res = await fetch('/graphql', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: SIGN_IN, variables: { username: "Shubham", email: email, password: password } }),
+                });
+                const result = await res.json()
                 setLoading(false);
-            }, 2000);
+            } catch (error) {
+                setLoading(false);
+                console.error('Error during API call:', errors?.message);
+            }
         }
     };
 
