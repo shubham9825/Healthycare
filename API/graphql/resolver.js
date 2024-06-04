@@ -7,10 +7,16 @@ const resolvers = {
     signup: async (_, { username, email, password }) => {
       try {
         // Check if user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-          throw new Error('User already exists');
+        const existingUserByUsername = await User.findOne({ username });
+        if (existingUserByUsername) {
+          throw new Error('Username already exists');
         }
+
+        const existingUserByEmail = await User.findOne({ email });
+        if (existingUserByEmail) {
+          throw new Error('Email already exists');
+        }
+
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -22,9 +28,9 @@ const resolvers = {
         // Generate JWT token
         const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET);
 
-        return { token, user: newUser };
+        return { token, user: newUser};
       } catch (error) {
-        throw new Error('Signup failed');
+        throw error;
       }
     },
     login: async (_, { email, password }) => {
@@ -46,7 +52,7 @@ const resolvers = {
 
         return { token, user };
       } catch (error) {
-        throw new Error('Login failed');
+        throw error;
       }
     },
   },

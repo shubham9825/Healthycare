@@ -29,5 +29,6 @@ const server = new ApolloServer({
 const PORT = process.env.API_PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Api Server is Running On ${PORT}`);
+    startApolloServer();
 });
 
