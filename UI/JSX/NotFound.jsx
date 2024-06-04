@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 
-export class NotFound extends Component {
-    render() {
-        return (
+const NotFound = () => {
+    return (
+        <>
             <Container>
                 <Row className="justify-content-center">
                     <Col xs={10} md={8} lg={6}>
@@ -13,9 +13,9 @@ export class NotFound extends Component {
                         </div>
                     </Col>
                 </Row>
-            </Container>
-        );
-    }
+            </Container >
+        </>
+    );
 }
 
 export default NotFound;

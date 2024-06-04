@@ -1,0 +1,102 @@
+import React, { useState } from "react";
+import {
+    Card,
+    CardBody,
+    Form,
+    Container,
+    Row,
+    Col
+} from "reactstrap";
+import { LoginValidation } from "./LoginValidation.js";
+import { InputValidate } from "../Common/InputValidate.jsx";
+import { CustomButton } from "../Common/CustomButton.jsx";
+import { Link } from 'react-router-dom';
+
+
+const initialState = {
+    email: "",
+    password: "",
+};
+
+const SignIn = () => {
+    const [formData, setFormData] = useState(initialState);
+    const [errorMessage, setErrorMsg] = useState(initialState);
+    const [loading, setLoading] = useState(false);
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        const error = LoginValidation(name, value);
+
+        setFormData((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+
+        setErrorMsg((prevState) => ({
+            ...prevState,
+            [name]: error,
+        }));
+    };
+
+    const handleSignIn = async (event) => {
+        event.preventDefault();
+        const { email, password } = formData;
+
+        const emailError = LoginValidation("email", email);
+        const passwordError = LoginValidation("password", password);
+
+        setErrorMsg({
+            email: emailError,
+            password: passwordError,
+        });
+
+        if (!emailError && !passwordError) {
+            setLoading(true);
+
+            // Simulate a login API call
+            setTimeout(() => {
+                setLoading(false);
+            }, 2000);
+        }
+    };
+
+    return (
+        <Container className="mt-5">
+            <Row className="justify-content-center">
+                <Col md="6">
+                    <Card>
+                        <CardBody className="px-lg-5 py-lg-5">
+                            <h3 className="text-center">Login</h3>
+                            <Form onSubmit={handleSignIn} noValidate>
+                                <InputValidate
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email"
+                                    error={errorMessage.email}
+                                    value={formData.email}
+                                    onChange={handleInputChange}
+                                    disabled={loading}
+                                />
+                                <InputValidate
+                                    type="Password"
+                                    name="password"
+                                    placeholder="Password"
+                                    error={errorMessage.password}
+                                    value={formData.password}
+                                    onChange={handleInputChange}
+                                    disabled={loading}
+                                />
+                                <div className="text-center mb-2">
+                                    <small>Don't have an account? <Link to="/signup">Sign Up</Link></small>
+                                </div>
+                                <CustomButton type="submit" textValue="Sign In" loading={loading} />
+                            </Form>
+                        </CardBody>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
+    );
+};
+
+export default SignIn;
