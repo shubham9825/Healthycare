@@ -3,7 +3,7 @@ import { Card, CardBody, Form, Container, Row, Col } from "reactstrap";
 import { LoginValidation } from "./LoginValidation";
 import { InputValidate } from "../Common/InputValidate.jsx";
 import { CustomButton } from "../Common/CustomButton.jsx";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SIGN_UP } from "../Common/Schema.jsx";
 
 const initialState = {
@@ -16,6 +16,7 @@ const Signup = () => {
     const [formData, setFormData] = useState(initialState);
     const [errorMessage, setErrorMsg] = useState(initialState);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -53,10 +54,11 @@ const Signup = () => {
                 const res = await fetch('/graphql', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: SIGN_UP, variables: { username: "Shubham", email: email, password: password } }),
+                    body: JSON.stringify({ query: SIGN_UP, variables: { email: email, password: password } }),
                 });
                 const result = await res.json()
                 setLoading(false);
+                navigate('/signIn');
             } catch (error) {
                 console.error('Error during API call:', error?.message);
                 setLoading(false);
