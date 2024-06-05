@@ -1,17 +1,13 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { ApolloError } from 'apollo-server-errors';
 
 const resolvers = {
   Mutation: {
-    signup: async (_, { username, email, password }) => {
+    signup: async (_, { email, password }) => {
       try {
-        // Check if user already exists
-        const existingUserByUsername = await User.findOne({ username });
-        if (existingUserByUsername) {
-          throw new Error('Username already exists');
-        }
-
+       
         const existingUserByEmail = await User.findOne({ email });
         if (existingUserByEmail) {
           throw new Error('Email already exists');
@@ -22,13 +18,13 @@ const resolvers = {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create new user
-        const newUser = new User({ username, email, password: hashedPassword });
+        const newUser = new User({ email, password: hashedPassword });
         await newUser.save();
 
         // Generate JWT token
         const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET);
 
-        return { token, user: newUser};
+        return { token, user: newUser };
       } catch (error) {
         throw error;
       }
@@ -44,7 +40,10 @@ const resolvers = {
         // Compare passwords
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-          throw new Error('Invalid password');
+          throw new ApolloError('Invalid password', 'UNAUTHORIZED', {
+            statusCode: 401, // Optional: Add status code for clarity
+            messageForClient: 'Incorrect password.', // Message for frontend
+          });
         }
 
         // Generate JWT token
@@ -52,7 +51,10 @@ const resolvers = {
 
         return { token, user };
       } catch (error) {
-        throw error;
+        throw new ApolloError(error.message, error.extensions.code || 'LOGIN_ERROR', {
+          statusCode: error.extensions.statusCode || 500,
+          messageForClient: error.extensions.messageForClient || 'An error occurred during login.',
+        });
       }
     },
   },

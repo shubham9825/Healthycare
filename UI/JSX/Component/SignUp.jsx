@@ -53,7 +53,7 @@ const Signup = () => {
                 const res = await fetch('/graphql', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: SIGN_UP, variables: { username: "Shubham", email: email, password: password } }),
+                    body: JSON.stringify({ query: SIGN_UP, variables: { username: "Milap", email: email, password: password } }),
                 });
                 const result = await res.json()
                 setLoading(false);
