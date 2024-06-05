@@ -8,9 +8,12 @@ node_modules/
 
 package-lock.json
 
-
 .vscode/
 .idea/
+
+.DS_Store
+env.env
+.env
 
 *.log
 *.tmp

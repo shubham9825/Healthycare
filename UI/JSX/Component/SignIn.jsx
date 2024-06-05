@@ -77,7 +77,7 @@ const SignIn = () => {
                 <Col md="6">
                     <Card>
                         <CardBody className="px-lg-5 py-lg-5">
-                            <h3 className="text-center">Login</h3>
+                            <h3 className="text-center">SIgnIn</h3>
                             <Form onSubmit={handleSignIn} noValidate>
                                 <InputValidate
                                     type="email"
