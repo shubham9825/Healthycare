@@ -1,6 +1,6 @@
 
 node_modules/
-public/
+/UI/public/
 
 
 .env

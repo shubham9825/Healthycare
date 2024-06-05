@@ -4,14 +4,8 @@ import User from '../models/User.js';
 
 const resolvers = {
   Mutation: {
-    signup: async (_, { username, email, password }) => {
+    signup: async (_, { email, password }) => {
       try {
-        // Check if user already exists
-        const existingUserByUsername = await User.findOne({ username });
-        if (existingUserByUsername) {
-          throw new Error('Username already exists');
-        }
-
         const existingUserByEmail = await User.findOne({ email });
         if (existingUserByEmail) {
           throw new Error('Email already exists');
@@ -22,7 +16,7 @@ const resolvers = {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create new user
-        const newUser = new User({ username, email, password: hashedPassword });
+        const newUser = new User({email, password: hashedPassword });
         await newUser.save();
 
         // Generate JWT token
