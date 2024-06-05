@@ -58,7 +58,7 @@ const SignIn = () => {
                 const res = await fetch('/graphql', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: SIGN_IN, variables: { username: "Shubham", email: email, password: password } }),
+                    body: JSON.stringify({ query: SIGN_IN, variables: { email: email, password: password } }),
                 });
                 const result = await res.json()
                 localStorage.setItem('token', result?.data?.login?.token)
