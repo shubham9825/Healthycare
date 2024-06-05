@@ -10,7 +10,7 @@ import {
 import { LoginValidation } from "./LoginValidation.js";
 import { InputValidate } from "../Common/InputValidate.jsx";
 import { CustomButton } from "../Common/CustomButton.jsx";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SIGN_IN } from "../Common/Schema.jsx";
 
 
@@ -23,6 +23,7 @@ const SignIn = () => {
     const [formData, setFormData] = useState(initialState);
     const [errorMessage, setErrorMsg] = useState(initialState);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -60,7 +61,9 @@ const SignIn = () => {
                     body: JSON.stringify({ query: SIGN_IN, variables: { username: "Shubham", email: email, password: password } }),
                 });
                 const result = await res.json()
+                localStorage.setItem('token', result?.data?.login?.token)
                 setLoading(false);
+                navigate('/');
             } catch (error) {
                 setLoading(false);
                 console.error('Error during API call:', errors?.message);
