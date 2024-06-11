@@ -1,4 +1,4 @@
-export const LoginValidation = (name, value) => {
+export const loginValidation = (name, value) => {
     switch (name) {
         case "email":
             if (!value || value.trim() === "") {

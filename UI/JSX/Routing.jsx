@@ -4,6 +4,7 @@ import NotFound from './Component/NotFound.jsx';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import { showToast } from './utils/toastService.js';
 
 const Dashboard = lazy(() => retry(() => import("./Component/Dashboard.jsx")))
 const SignUp = lazy(() => retry(() => import("./Component/SignUp.jsx")))
@@ -61,6 +62,7 @@ export default function Routing() {
     const handleLogout = () => {
         localStorage.removeItem('token');
         navigate('/signin');
+        showToast("Logout Successfully!", 'success')
     };
 
     return (
