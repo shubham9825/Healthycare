@@ -5,11 +5,6 @@
 # Ignore the UI public directory
 /UI/public/
 
-# Environment variable files
-.env
-.env.local
-env.env
-
 # Lock files
 package-lock.json
 

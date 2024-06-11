@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Card, CardBody, Form, Container, Row, Col } from "reactstrap";
-import { LoginValidation } from "./LoginValidation";
+import { loginValidation } from "../utils/loginValidation.js";
 import { InputValidate } from "../Common/InputValidate.jsx";
 import { CustomButton } from "../Common/CustomButton.jsx";
 import { Link, useNavigate } from 'react-router-dom';
 import { SIGN_UP } from "../Common/Schema.jsx";
+import { showToast } from "../utils/toastService.js";
 
 const initialState = {
     email: "",
@@ -20,7 +21,7 @@ const Signup = () => {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        const error = LoginValidation(name, value);
+        const error = loginValidation(name, value);
 
         setFormData((prevState) => ({
             ...prevState,
@@ -37,9 +38,9 @@ const Signup = () => {
         event.preventDefault();
         const { email, password, confirmPassword } = formData;
 
-        const emailError = LoginValidation("email", email);
-        const passwordError = LoginValidation("password", password);
-        const confirmPasswordError = LoginValidation("confirmPassword", confirmPassword);
+        const emailError = loginValidation("email", email);
+        const passwordError = loginValidation("password", password);
+        const confirmPasswordError = loginValidation("confirmPassword", confirmPassword);
 
         setErrorMsg({
             email: emailError,
@@ -49,7 +50,6 @@ const Signup = () => {
 
         if (!emailError && !passwordError && !confirmPasswordError) {
             setLoading(true);
-
             try {
                 const res = await fetch('/graphql', {
                     method: 'POST',
@@ -57,10 +57,16 @@ const Signup = () => {
                     body: JSON.stringify({ query: SIGN_UP, variables: { email: email, password: password } }),
                 });
                 const result = await res.json()
+                if (result?.data) {
+                    navigate('/signIn');
+                    setLoading(false);
+                } else {
+                    showToast(result?.errors[0]?.message, 'error')
+                    alert(result?.errors[0]?.message);
+                }
                 setLoading(false);
-                navigate('/signIn');
             } catch (error) {
-                console.error('Error during API call:', error?.message);
+                showToast(error?.message, 'error')
                 setLoading(false);
             }
         }

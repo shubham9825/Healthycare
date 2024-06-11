@@ -7,12 +7,12 @@ import {
     Row,
     Col
 } from "reactstrap";
-import { LoginValidation } from "./LoginValidation.js";
+import { loginValidation } from "../utils/loginValidation.js";
 import { InputValidate } from "../Common/InputValidate.jsx";
 import { CustomButton } from "../Common/CustomButton.jsx";
 import { Link, useNavigate } from 'react-router-dom';
 import { SIGN_IN } from "../Common/Schema.jsx";
-
+import { showToast } from "../utils/toastService.js";
 
 const initialState = {
     email: "",
@@ -27,7 +27,7 @@ const SignIn = () => {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        const error = LoginValidation(name, value);
+        const error = loginValidation(name, value);
 
         setFormData((prevState) => ({
             ...prevState,
@@ -44,8 +44,8 @@ const SignIn = () => {
         event.preventDefault();
         const { email, password } = formData;
 
-        const emailError = LoginValidation("email", email);
-        const passwordError = LoginValidation("password", password);
+        const emailError = loginValidation("email", email);
+        const passwordError = loginValidation("password", password);
 
         setErrorMsg({
             email: emailError,
@@ -61,12 +61,16 @@ const SignIn = () => {
                     body: JSON.stringify({ query: SIGN_IN, variables: { email: email, password: password } }),
                 });
                 const result = await res.json()
-                localStorage.setItem('token', result?.data?.login?.token)
+                if (result?.data?.login?.token) {
+                    localStorage.setItem('token', result?.data?.login?.token)
+                    navigate('/');
+                } else {
+                    showToast(result?.errors[0]?.message, 'error')
+                }
                 setLoading(false);
-                navigate('/');
             } catch (error) {
                 setLoading(false);
-                console.error('Error during API call:', errors?.message);
+                showToast(error?.message, 'error')
             }
         }
     };
@@ -77,7 +81,7 @@ const SignIn = () => {
                 <Col md="6">
                     <Card>
                         <CardBody className="px-lg-5 py-lg-5">
-                            <h3 className="text-center">SIgnIn</h3>
+                            <h3 className="text-center">Sign In</h3>
                             <Form onSubmit={handleSignIn} noValidate>
                                 <InputValidate
                                     type="email"
