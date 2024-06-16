@@ -1,9 +1,10 @@
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import bodyParser from 'body-parser';
-import typeDefs from './graphql/schema.js';
-import resolvers from './graphql/resolver.js';
-import connectDB from './db.js';
+import typeDefs from './graphql/schema/schema.js';
+import resolvers from './graphql/resolvers/resolver.js';
+import connectDB from './Database/db.js';
+import initDB from './Database/initdb.js';
 import dotenv from 'dotenv';
 dotenv.config({ path: './env.env' })
 const app = express();
@@ -14,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 connectDB();
-
+initDB();
 //Apollo Server
 const server = new ApolloServer({
   typeDefs,
