@@ -9,6 +9,7 @@ import { showToast } from './utils/toastService.js';
 const Dashboard = lazy(() => retry(() => import("./Component/Dashboard.jsx")))
 const SignUp = lazy(() => retry(() => import("./Component/SignUp.jsx")))
 const SignIn = lazy(() => retry(() => import("./Component/SignIn.jsx")))
+const Appointment = lazy(() => retry(() => import("./Component/Appointment.jsx")))
 
 const retry = (lazyComponent, attemptsLeft = 2) => {
     return new Promise((resolve, reject) => {
@@ -42,6 +43,11 @@ const routes = [
         component: SignIn,
         isAuth: false,
     },
+    {
+        path: "/Appointment",
+        component: Appointment,
+        isAuth: true,
+    },
 ]
 
 const isAuthenticated = () => {
@@ -57,7 +63,7 @@ const ProtectedRoute = ({ element: Component, isAuth, ...rest }) => {
 
 export default function Routing() {
     const navigate = useNavigate();
-    const filteredAuthRoutes = routes.filter(route => !isAuthenticated() || (route.path !== "/SignUp" && route.path !== "/SignIn"));
+    const filteredAuthRoutes = routes.filter(route => isAuthenticated() ? route.isAuth : !route.isAuth);
 
     const handleLogout = () => {
         localStorage.removeItem('token');

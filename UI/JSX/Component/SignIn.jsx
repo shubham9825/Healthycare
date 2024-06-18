@@ -63,7 +63,7 @@ const SignIn = () => {
                 const result = await res.json()
                 if (result?.data?.login?.token) {
                     localStorage.setItem('token', result?.data?.login?.token)
-                    navigate('/');
+                    navigate('/Appointment');
                 } else {
                     showToast(result?.errors[0]?.message, 'error')
                 }
