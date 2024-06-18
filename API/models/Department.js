@@ -5,7 +5,7 @@ const DepartmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-});
+},{ timestamps: true });
 
 const Department = mongoose.model('Department', DepartmentSchema);
 

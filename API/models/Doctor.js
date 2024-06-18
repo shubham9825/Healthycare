@@ -10,7 +10,7 @@ const DoctorSchema = new mongoose.Schema({
     ref: 'Department',
     required: true,
   },
-});
+},{ timestamps: true });
 
 const Doctor = mongoose.model('Doctor', DoctorSchema);
 
