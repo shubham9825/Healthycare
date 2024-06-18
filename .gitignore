@@ -1,19 +1,20 @@
+# Ignore node_modules directories in both API and UI
+/API/node_modules/
+/UI/node_modules/
 
-node_modules/
+# Ignore the UI public directory
 /UI/public/
 
-
-.env
-.env.local
-
+# Lock files
 package-lock.json
 
+# IDE directories
 .vscode/
 .idea/
 
+# macOS system files
 .DS_Store
-env.env
-.env
 
+# Miscellaneous
 *.log
 *.tmp
