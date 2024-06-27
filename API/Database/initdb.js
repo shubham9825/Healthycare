@@ -4,8 +4,6 @@ import Doctor from '../models/Doctor.js';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: './env.env' });
-const mongoURI = process.env.URL_DB;
-console.log("mONGO",mongoURI);
 
 connectDB();
 
@@ -16,17 +14,15 @@ const departmentsData = [
 ];
 
 const doctorsData = [
-  { name: 'Dr. Rahul Patel', department: null },
-  { name: 'Dr. Priya Shah', department: null },
-  { name: 'Dr. Sanjay Kumar', department: null },
-
-  { name: 'Dr. Michael Johnson', department: null },
-  { name: 'Dr. Jennifer Smith', department: null },
-  { name: 'Dr. Emily Brown', department: null },
-
-  { name: 'Dr. Ethan Williams', department: null },
-  { name: 'Dr. Olivia Taylor', department: null },
-  { name: 'Dr. Benjamin Anderson', department: null },
+  { name: 'Dr. Rahul Patel' },
+  { name: 'Dr. Priya Shah' },
+  { name: 'Dr. Sanjay Kumar' },
+  { name: 'Dr. Michael Johnson' },
+  { name: 'Dr. Jennifer Smith' },
+  { name: 'Dr. Emily Brown' },
+  { name: 'Dr. Ethan Williams' },
+  { name: 'Dr. Olivia Taylor' },
+  { name: 'Dr. Benjamin Anderson' },
 ];
 
 const initDepartments = async () => {
@@ -42,20 +38,22 @@ const initDepartments = async () => {
 
 const initDoctors = async (departments) => {
   try {
+    await Doctor.deleteMany();
     const doctors = [];
+    let doctorIndex = 0;
+
     for (const department of departments) {
-      const departmentDoctors = doctorsData
-        .filter(doctorData => doctorData.department === null)
-        .splice(0, 3)
-        .map(doctorData => ({
-          ...doctorData,
-          department: department._id,
-        }));
+      const departmentDoctors = doctorsData.slice(doctorIndex, doctorIndex + 3).map(doctorData => ({
+        ...doctorData,
+        department: department._id,
+      }));
+      doctorIndex += 3;
       await Doctor.insertMany(departmentDoctors);
-      doctors.push(departmentDoctors);
+      doctors.push(...departmentDoctors);
     }
+
     console.log('Doctors initialized successfully');
-    return doctors.flat();
+    return doctors;
   } catch (error) {
     console.error('Error initializing doctors:', error);
   }
