@@ -10,11 +10,12 @@ const appointmentSchema = gql`
   }
 
   input AppointmentInput {
-  userId: ID!
-  doctorId: ID!
-  date: String!
-  time: String!
-}
+    department: String!
+    doctor: String!
+    date: String!
+    userId: ID!
+    doctorId: ID!
+  }
 
  extend type Query {
     getAppointments(userId: ID!): [Appointment!]!

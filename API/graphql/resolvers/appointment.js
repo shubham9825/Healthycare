@@ -5,12 +5,12 @@ import mongoose from 'mongoose';
 
 const appointmentResolvers = {
   Query: {
-    getAppointments: async(_,__,{ user }) =>{
+    getAppointments: async (_, { userId }, { user }) => {
       try {
-        if(!user) {
+        if (!user) {
           throw new Error('User Not Authenticated');
         }
-        const appointments = await Appointment.find({ user: user.id });
+        const appointments = await Appointment.find({ user: userId });
         return appointments;
       } catch (error) {
         console.error('Error fetching appointments:', error);
@@ -19,17 +19,32 @@ const appointmentResolvers = {
     }
   },
   Mutation: {
-    createAppointment: async (_, { input }, { user }) => {
+    createAppointment: async (_, { input }) => {
       try {
-        if (!user) {
-          throw new Error('User not authenticated');
+        const { department, doctor, date, userId, doctorId } = input;
+
+        // Validate department and doctor names
+        const departmentExists = await Department.exists({ name: department });
+        if (!departmentExists) {
+          throw new Error('Department not found');
         }
+
+        const doctorExists = await Doctor.exists({ name: doctor });
+        if (!doctorExists) {
+          throw new Error('Doctor not found');
+        }
+
+        // Extract date and time from the input date string
+        const dateObject = new Date(date);
+        const dateString = dateObject.toISOString().split('T')[0]; // YYYY-MM-DD
+        const timeString = dateObject.toISOString().split('T')[1].split('.')[0]; // HH:MM:SS
+
         // Create a new appointment record
         const appointment = new Appointment({
-          user: user._id.toString(),
-          doctor: input.doctorId,
-          date: input.date,
-          time: input.time,
+          user: userId,
+          doctor: doctorId,
+          date: dateString,
+          time: timeString,
         });
         await appointment.save();
         return appointment;
