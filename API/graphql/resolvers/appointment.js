@@ -41,13 +41,31 @@ const appointmentResolvers = {
 
         // Create a new appointment record
         const appointment = new Appointment({
-          user: userId,
-          doctor: doctorId,
+          user: new mongoose.Types.ObjectId(userId),
+          doctor:new  mongoose.Types.ObjectId(doctorId),
           date: dateString,
           time: timeString,
         });
         await appointment.save();
-        return appointment;
+
+        // Fetch the full appointment details including user and doctor information
+        const populatedAppointment = await Appointment.findById(appointment._id)
+          .populate('user')
+          .populate('doctor')
+          .exec();
+
+        return {
+          ...populatedAppointment._doc,
+          id: populatedAppointment._id.toString(),
+          user: {
+            ...populatedAppointment.user._doc,
+            id: populatedAppointment.user._id.toString(),
+          },
+          doctor: {
+            ...populatedAppointment.doctor._doc,
+            id: populatedAppointment.doctor._id.toString(),
+          },
+        };
       } catch (error) {
         console.error('Error creating appointment:', error);
         throw new Error('Error creating appointment');
