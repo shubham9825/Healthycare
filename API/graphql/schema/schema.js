@@ -1,8 +1,6 @@
 import { gql } from 'apollo-server-express';
 
-//GraphQL schema language
 const typeDefs = gql`
-
 type Query {
   hello: String
 }
@@ -22,5 +20,4 @@ type Query {
     login(email: String!, password: String!): AuthPayload!
   }
 `;
-
 export default typeDefs;

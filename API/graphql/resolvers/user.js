@@ -1,8 +1,10 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import User from '../../models/User.js';
 
-const resolvers = {
+
+
+const userResolvers = {
   Mutation: {
     signup: async (_, { email, password }) => {
       try {
@@ -52,4 +54,4 @@ const resolvers = {
   },
 };
 
-export default resolvers;
+export default userResolvers;

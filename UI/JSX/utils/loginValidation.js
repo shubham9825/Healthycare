@@ -33,3 +33,24 @@ export const loginValidation = (name, value) => {
         }
     }
 };
+
+export const appointmentValidation = (name, value) => {
+    switch (name) {
+        case "department":
+            if (!value || value.trim() === "") {
+                return "Department is required";
+            } else {
+                return "";
+            }
+        case "doctor":
+            if (!value || value.trim() === "") {
+                return "Doctor is required";
+            } else {
+                return "";
+            }
+
+        default: {
+            return "";
+        }
+    }
+};
