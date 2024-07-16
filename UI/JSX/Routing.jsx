@@ -152,7 +152,13 @@ export default function Routing() {
         </div>
       </div>
 
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <div className="loader-wrap">
+            <div className="loader"></div>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<Dashboard />} />
           {routes.map((route, index) => (
