@@ -6,6 +6,8 @@ import { CustomButton } from "../Common/CustomButton.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { SIGN_IN } from "../Common/Schema.jsx";
 import { showToast } from "../utils/toastService.js";
+import { useDispatch } from "react-redux";
+import { loginInSuccessAction } from "../Redux/auth/action.js";
 
 const initialState = {
   email: "",
@@ -17,6 +19,7 @@ const SignIn = () => {
   const [errorMessage, setErrorMsg] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -58,8 +61,9 @@ const SignIn = () => {
         });
         const result = await res.json();
         if (result?.data?.login?.token) {
+          dispatch(loginInSuccessAction(result?.data));
           localStorage.setItem("token", result?.data?.login?.token);
-          navigate("/");
+          navigate("/Appointment");
         } else {
           showToast(result?.errors[0]?.message, "error");
         }

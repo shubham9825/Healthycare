@@ -1,12 +1,12 @@
 export const SIGN_IN = `mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-      user {
-        email
-        id
-      }
+  login(email: $email, password: $password) {
+    token
+    user {
+      email
+      id
     }
-  }`
+  }
+}`;
 
 export const SIGN_UP = `mutation Signup( $email: String!, $password: String!) {
     signup(email: $email, password: $password) {
@@ -14,6 +14,35 @@ export const SIGN_UP = `mutation Signup( $email: String!, $password: String!) {
       user {
         email
         id
-      }
+     }
+   }
+}`;
+
+export const GET_DEPARTMENT = `query Query {
+  departments {
+    id
+    name
+  }
+}`;
+
+export const GET_DOCTOR = `query Doctors($departmentId: ID!) {
+  doctors(departmentId: $departmentId) {
+    id
+    name
+  }
+}`;
+
+export const CREATE_APPOINTMENT = `
+mutation Mutation($input: AppointmentInput!) {
+  createAppointment(input: $input) {
+    date
+    doctor {
+      id
     }
-  }`
+    id
+    time
+    user {
+      id
+    }
+  }
+}`;
