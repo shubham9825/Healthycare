@@ -9,14 +9,14 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
 const element = (
-    <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-            <Router>
-                <Routing />
-                <Toaster position="top-right" />
-            </Router>
-        </PersistGate>
-    </Provider>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <Router>
+        <Routing />
+        <Toaster position="top-right" />
+      </Router>
+    </PersistGate>
+  </Provider>
 );
 
 const root = createRoot(document.getElementById("root"));

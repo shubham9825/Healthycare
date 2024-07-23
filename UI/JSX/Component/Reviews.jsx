@@ -31,7 +31,7 @@ export const Reviews = () => {
   handleReviewsUpdation();
 
   return (
-    <div className="review-section" id="reviews">
+    <div className="review-section" id="Reviews">
       <div className="rw-text-content">
         <p className="rw-text-title">
           More over <span className="rw-text-num">1500+ Customers</span>
@@ -40,9 +40,7 @@ export const Reviews = () => {
         <p className="rw-text-desc">Don't believe us, Check clients word</p>
 
         <p className="rw-text-format">
-          <span className="rw-text-quote1">''</span>
           <span className="rw-review">{rMessage}</span>
-          <span className="rw-text-quote2">''</span>
         </p>
 
         <div className="rw-authors">

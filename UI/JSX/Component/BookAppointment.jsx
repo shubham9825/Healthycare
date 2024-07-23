@@ -19,7 +19,7 @@ export const BookAppointment = () => {
     "Best Professional Doctors",
     "Emergency Care",
     "24/7 Support Live Chat",
-    " Enrollment Easy and Quick",
+    "Enrollment Easy and Quick",
   ];
 
   return (

@@ -38,7 +38,7 @@ const cardDetails = [
 
 export const Info = () => {
   return (
-    <div className="info-section" id="services">
+    <div className="info-section" id="Services">
       <div className="info-title-content">
         <h3 className="info-title">
           <span>What We Do</span>

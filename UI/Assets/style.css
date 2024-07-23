@@ -226,7 +226,6 @@
 .custom-date-picker .date-picker-label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: bold;
 }
 
 .custom-date-picker .react-datepicker-wrapper {

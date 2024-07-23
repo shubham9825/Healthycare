@@ -39,7 +39,7 @@
   letter-spacing: 0.8px;
 }
 .navbar-links:hover {
-  color: #0cc2ea;
+  color: #fff;
 }
 .navbar-btn {
   padding: 14px 20px;
@@ -69,7 +69,7 @@
   cursor: pointer;
 }
 .hamb-icon:hover {
-  color: #0cc2ea;
+  color: #fff;
 }
 /* Mobile Navbar */
 .mobile-navbar {

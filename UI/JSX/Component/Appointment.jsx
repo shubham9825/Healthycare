@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Form, Row } from "reactstrap";
 import { CustomButton } from "../Common/CustomButton.jsx";
+import { Stepper } from "react-form-stepper";
 import SelectValidate from "../Common/SelectValidate.jsx";
 import CustomDatePicker from "../Common/CustomDatePicker.jsx";
 import {
@@ -22,6 +23,22 @@ const apiInitialState = {
   departments: [],
   doctors: [],
 };
+
+const steps = [
+  { label: "Select Department" },
+  { label: "Select Doctor" },
+  { label: "Select Consultation Date" },
+];
+
+const styleConfig = {
+  activeBgColor: "#903053",
+};
+
+const stepCondition = [
+  { key: "department", value: 1 },
+  { key: "doctor", value: 2 },
+  { key: "date", value: 3 },
+];
 
 const Appointment = () => {
   const [formData, setFormData] = useState(initialState);
@@ -124,12 +141,27 @@ const Appointment = () => {
     console.log("userId :>> ", cloneFormData);
   };
 
+  const checkValues = (obj) => {
+    const result = stepCondition
+      .filter((con) => obj[con.key])
+      .map((data) => data.value);
+
+    return result.length ? result : null;
+  };
+
   const { department, doctor, date } = formData;
   const maximumDate = new Date(new Date().setMonth(new Date().getMonth() + 1));
+  const result = checkValues(formData);
 
   return (
     <>
-      <Container className="appointment-container mt-5">
+      <Stepper
+        className="mt-5"
+        steps={steps}
+        activeStep={result}
+        styleConfig={styleConfig}
+      />
+      <Container className="appointment-container mt-3">
         <Row className="justify-content-center">
           <Col xs="12" sm="10" md="8" lg="6">
             <h3 className="text-center mb-4">Book An Appointment</h3>
@@ -166,7 +198,7 @@ const Appointment = () => {
                       maxTime={setHours(setMinutes(new Date(), 0), 17)}
                       minDate={new Date()}
                       maxDate={maximumDate}
-                      label="Select Consultation date"
+                      label="Select Consultation Date"
                       dateFormat="MMMM d, yyyy HH:mm"
                       selected={date}
                       placeholderText="Select date and time"
