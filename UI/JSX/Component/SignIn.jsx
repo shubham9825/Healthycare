@@ -63,7 +63,8 @@ const SignIn = () => {
         if (result?.data?.login?.token) {
           dispatch(loginInSuccessAction(result?.data));
           localStorage.setItem("token", result?.data?.login?.token);
-          navigate("/Appointment");
+          showToast("Login Successfully!", "success");
+          navigate("/");
         } else {
           showToast(result?.errors[0]?.message, "error");
         }

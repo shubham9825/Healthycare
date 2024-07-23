@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import "../Assets/Styles/Navbar.css";
 import logo from "../Assets/Images/healthyCareLife.png";
+import { scroller } from "react-scroll";
 
 const Dashboard = lazy(() => retry(() => import("./Component/Dashboard.jsx")));
 const SignUp = lazy(() => retry(() => import("./Component/SignUp.jsx")));
@@ -13,6 +14,7 @@ const SignIn = lazy(() => retry(() => import("./Component/SignIn.jsx")));
 const Appointment = lazy(() =>
   retry(() => import("./Component/Appointment.jsx"))
 );
+const navLinkList = ["Services", "About", "Reviews", "Doctors"];
 
 const retry = (lazyComponent, attemptsLeft = 2) => {
   return new Promise((resolve, reject) => {
@@ -77,6 +79,18 @@ export default function Routing() {
     showToast("Logout Successfully!", "success");
   };
 
+  const scrollToSection = (section, isMobile) => {
+    scroller.scrollTo(section, {
+      duration: 500,
+      delay: 0,
+      smooth: "easeInOutQuart",
+    });
+
+    if (isMobile) {
+      setNav(!nav);
+    }
+  };
+
   return (
     <>
       <div className="navbar-section">
@@ -90,22 +104,34 @@ export default function Routing() {
         <ul className="navbar-items">
           <li>
             <Link className="navbar-links" to={"/"}>
-              Dashboard
+              Home
             </Link>
           </li>
           {filteredAuthRoutes.map((route, index) => (
             <li key={index}>
               <Link to={route.path} className="navbar-links">
-                {route.path === "/" ? "Dashboard" : route.path.substring(1)}
+                {route.path === "/" ? "Home" : route.path.substring(1)}
               </Link>
             </li>
           ))}
           {isAuthenticated() && (
-            <li>
-              <Link className="navbar-links" onClick={handleLogout}>
-                Logout
-              </Link>
-            </li>
+            <>
+              {navLinkList.map((data, index) => (
+                <li key={index}>
+                  <Link
+                    className="navbar-links"
+                    onClick={() => scrollToSection(data)}
+                  >
+                    {data}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link className="navbar-links" onClick={handleLogout}>
+                  Logout
+                </Link>
+              </li>
+            </>
           )}
         </ul>
 
@@ -118,7 +144,7 @@ export default function Routing() {
           <ul className="mobile-navbar-links">
             <li>
               <Link className="navbar-links" onClick={openNav} to={"/"}>
-                Dashboard
+                Home
               </Link>
             </li>
             {filteredAuthRoutes.map((route, index) => (
@@ -128,16 +154,28 @@ export default function Routing() {
                   onClick={openNav}
                   className="navbar-links"
                 >
-                  {route.path === "/" ? "Dashboard" : route.path.substring(1)}
+                  {route.path === "/" ? "Home" : route.path.substring(1)}
                 </Link>
               </li>
             ))}
             {isAuthenticated() && (
-              <li>
-                <Link className="navbar-links" onClick={handleLogout}>
-                  Logout
-                </Link>
-              </li>
+              <>
+                {navLinkList.map((data, index) => (
+                  <li key={index}>
+                    <Link
+                      className="navbar-links"
+                      onClick={() => scrollToSection(data, true)}
+                    >
+                      {data}
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <Link className="navbar-links" onClick={handleLogout}>
+                    Logout
+                  </Link>
+                </li>
+              </>
             )}
           </ul>
         </div>

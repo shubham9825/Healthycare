@@ -44,7 +44,7 @@ export const Hero = () => {
         <div className="text-section">
           <p className="text-headline">❤️ Health comes first</p>
           <h2 className="text-title">
-            Find your Doctor and make an Appointments
+            Find your Doctor and make an Appointment
           </h2>
           <p className="text-descritpion">
             Talk to online doctors and get medical advice, online prescriptions,

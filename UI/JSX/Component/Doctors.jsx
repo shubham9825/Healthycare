@@ -39,7 +39,7 @@ const doctorDetails = [
 
 export const Doctors = () => {
   return (
-    <div className="doctor-section" id="doctors">
+    <div className="doctor-section" id="Doctors">
       <div className="dt-title-content">
         <h3 className="dt-title">
           <span>Meet Our Doctors</span>
