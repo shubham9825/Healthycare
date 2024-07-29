@@ -4,10 +4,10 @@
   justify-content: space-between;
   align-items: center;
   height: 80px;
-  background-color: #1a8efd;
+  background-color: #3c9cf6;
 }
 .navbar-title a {
-  color: #1a8efd;
+  color: #3c9cf6;
   letter-spacing: 0.6px;
   text-decoration: none;
 }
@@ -47,7 +47,7 @@
   border: 1px solid transparent;
   border-radius: 28px;
   outline: transparent;
-  background-color: #1a8efd;
+  background-color: #3c9cf6;
   font-size: 18px;
   font-family: "Rubik", sans-serif;
   letter-spacing: 0.8px;
@@ -55,9 +55,9 @@
   transition: all 0.4s ease;
 }
 .navbar-btn:hover {
-  color: #1a8efd;
+  color: #3c9cf6;
   background-color: white;
-  border: 1px solid #1a8efd;
+  border: 1px solid #3c9cf6;
 }
 /* Hamburger Icon */
 .mobile-nav {

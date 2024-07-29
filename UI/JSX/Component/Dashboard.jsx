@@ -1,6 +1,6 @@
 import React from "react";
 import { Hero } from "../Component/Hero.jsx";
-import { Info } from "./Info.jsx";
+import { Services } from "./Services.jsx";
 import { About } from "./About.jsx";
 import { BookAppointment } from "./BookAppointment.jsx";
 import { Reviews } from "./Reviews.jsx";
@@ -11,7 +11,7 @@ const Dashboard = () => {
   return (
     <div className="home-section">
       <Hero />
-      <Info />
+      <Services />
       <About />
       <BookAppointment />
       <Reviews />
