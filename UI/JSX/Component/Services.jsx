@@ -36,7 +36,7 @@ const cardDetails = [
   },
 ];
 
-export const Info = () => {
+export const Services = () => {
   return (
     <div className="info-section" id="Services">
       <div className="info-title-content">

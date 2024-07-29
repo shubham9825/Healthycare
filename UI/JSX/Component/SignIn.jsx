@@ -8,6 +8,7 @@ import { SIGN_IN } from "../Common/Schema.jsx";
 import { showToast } from "../utils/toastService.js";
 import { useDispatch } from "react-redux";
 import { loginInSuccessAction } from "../Redux/auth/action.js";
+import "../../Assets/Styles/SignIn.css";
 
 const initialState = {
   email: "",
@@ -77,47 +78,49 @@ const SignIn = () => {
   };
 
   return (
-    <Container className="mt-5">
-      <Row className="justify-content-center">
-        <Col md="6">
-          <Card>
-            <CardBody className="px-lg-5 py-lg-5">
-              <h3 className="text-center">Sign In</h3>
-              <Form onSubmit={handleSignIn} noValidate>
-                <InputValidate
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  error={errorMessage.email}
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  disabled={loading}
-                />
-                <InputValidate
-                  type="Password"
-                  name="password"
-                  placeholder="Password"
-                  error={errorMessage.password}
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  disabled={loading}
-                />
-                <div className="text-center mb-2">
-                  <small>
-                    Don't have an account? <Link to="/signup">Sign Up</Link>
-                  </small>
-                </div>
-                <CustomButton
-                  type="submit"
-                  textValue="Sign In"
-                  loading={loading}
-                />
-              </Form>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+    <div className="login">
+      <h3 className="text-center mb-3">Sign In</h3>
+      <Form onSubmit={handleSignIn} noValidate>
+        <div className="text_area">
+          <InputValidate
+            type="email"
+            name="email"
+            placeholder="Email"
+            error={errorMessage.email}
+            value={formData.email}
+            onChange={handleInputChange}
+            className="text_input"
+            disabled={loading}
+          />
+        </div>
+        <div className="text_area">
+          <InputValidate
+            type="password"
+            name="password"
+            placeholder="Password"
+            error={errorMessage.password}
+            value={formData.password}
+            onChange={handleInputChange}
+            className="text_input"
+            disabled={loading}
+          />
+        </div>
+        <div className="text-center">
+          <small>
+            Don't have an account?{" "}
+            <Link to="/signup" className="link">
+              Sign Up
+            </Link>
+          </small>
+        </div>
+        <CustomButton
+          type="submit"
+          textValue="Sign In"
+          className="mt-3"
+          loading={loading}
+        />
+      </Form>
+    </div>
   );
 };
 

@@ -1,5 +1,12 @@
-import React, { Suspense, lazy, useState } from "react";
-import { Routes, Route, Link, Navigate, useNavigate } from "react-router-dom";
+import React, { Suspense, lazy, useEffect, useState } from "react";
+import {
+  Routes,
+  Route,
+  Link,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import NotFound from "./Component/NotFound.jsx";
 import { showToast } from "./utils/toastService.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,7 +21,6 @@ const SignIn = lazy(() => retry(() => import("./Component/SignIn.jsx")));
 const Appointment = lazy(() =>
   retry(() => import("./Component/Appointment.jsx"))
 );
-const navLinkList = ["Services", "About", "Reviews", "Doctors"];
 
 const retry = (lazyComponent, attemptsLeft = 2) => {
   return new Promise((resolve, reject) => {
@@ -34,6 +40,40 @@ const retry = (lazyComponent, attemptsLeft = 2) => {
 
 const routes = [
   {
+    path: "/",
+    component: Dashboard,
+    isPublic: true,
+  },
+  {
+    path: "/Appointment",
+    component: Appointment,
+    isAuth: true,
+  },
+  {
+    path: "/Services",
+    component: Dashboard,
+    isPublic: true,
+    text: "Services",
+  },
+  {
+    path: "/About",
+    component: Dashboard,
+    isPublic: true,
+    text: "About",
+  },
+  {
+    path: "/Reviews",
+    component: Dashboard,
+    isPublic: true,
+    text: "Reviews",
+  },
+  {
+    path: "/Doctors",
+    component: Dashboard,
+    isPublic: true,
+    text: "Doctors",
+  },
+  {
     path: "/SignUp",
     component: SignUp,
     isAuth: false,
@@ -42,11 +82,6 @@ const routes = [
     path: "/SignIn",
     component: SignIn,
     isAuth: false,
-  },
-  {
-    path: "/Appointment",
-    component: Appointment,
-    isAuth: true,
   },
 ];
 
@@ -63,32 +98,54 @@ const ProtectedRoute = ({ element: Component, isAuth, ...rest }) => {
 
 export default function Routing() {
   const [nav, setNav] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const openNav = () => {
     setNav(!nav);
   };
 
-  const navigate = useNavigate();
   const filteredAuthRoutes = routes.filter((route) =>
-    isAuthenticated() ? route.isAuth : !route.isAuth
+    !route.isPublic
+      ? isAuthenticated()
+        ? route.isAuth
+        : !route.isAuth
+      : !route.isAuth
   );
 
   const handleLogout = () => {
+    nav && openNav();
     localStorage.removeItem("token");
     navigate("/signin");
     showToast("Logout Successfully!", "success");
   };
 
-  const scrollToSection = (section, isMobile) => {
+  const funScroller = (section) => {
     scroller.scrollTo(section, {
       duration: 500,
       delay: 0,
       smooth: "easeInOutQuart",
     });
+  };
 
+  const scrollToSection = (section, isMobile) => {
+    window.location.hash = `#${section}`;
+    funScroller(section);
     if (isMobile) {
       setNav(!nav);
     }
+  };
+
+  useEffect(() => {
+    const hash = window.location.hash.replace("#", "").replace(/^\/+/, "");
+    if (hash) {
+      funScroller(hash);
+    }
+  }, [location.pathname]);
+
+  const funMobile = (text) => {
+    scrollToSection(text);
+    openNav();
   };
 
   return (
@@ -102,82 +159,57 @@ export default function Routing() {
 
         {/* Desktop */}
         <ul className="navbar-items">
-          <li>
-            <Link className="navbar-links" to={"/"}>
-              Home
-            </Link>
-          </li>
           {filteredAuthRoutes.map((route, index) => (
             <li key={index}>
-              <Link to={route.path} className="navbar-links">
+              <Link
+                to={route.path}
+                className="navbar-links"
+                onClick={() => scrollToSection(route?.text)}
+              >
                 {route.path === "/" ? "Home" : route.path.substring(1)}
               </Link>
             </li>
           ))}
           {isAuthenticated() && (
-            <>
-              {navLinkList.map((data, index) => (
-                <li key={index}>
-                  <Link
-                    className="navbar-links"
-                    onClick={() => scrollToSection(data)}
-                  >
-                    {data}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <Link className="navbar-links" onClick={handleLogout}>
-                  Logout
-                </Link>
-              </li>
-            </>
+            <li>
+              <Link className="navbar-links" onClick={handleLogout}>
+                Logout
+              </Link>
+            </li>
           )}
         </ul>
 
         {/* Mobile */}
+
         <div className={`mobile-navbar ${nav ? "open-nav" : ""}`}>
           <div onClick={openNav} className="mobile-navbar-close">
             <FontAwesomeIcon icon={faXmark} className="hamb-icon" />
           </div>
 
-          <ul className="mobile-navbar-links">
-            <li>
-              <Link className="navbar-links" onClick={openNav} to={"/"}>
-                Home
-              </Link>
-            </li>
-            {filteredAuthRoutes.map((route, index) => (
-              <li key={index}>
-                <Link
-                  to={route.path}
-                  onClick={openNav}
-                  className="navbar-links"
-                >
-                  {route.path === "/" ? "Home" : route.path.substring(1)}
-                </Link>
-              </li>
-            ))}
-            {isAuthenticated() && (
-              <>
-                {navLinkList.map((data, index) => (
-                  <li key={index}>
-                    <Link
-                      className="navbar-links"
-                      onClick={() => scrollToSection(data, true)}
-                    >
-                      {data}
-                    </Link>
-                  </li>
-                ))}
+          {nav ? (
+            <ul className="mobile-navbar-links">
+              {filteredAuthRoutes.map((route, index) => (
+                <li key={index}>
+                  <Link
+                    to={route.path}
+                    onClick={() => funMobile(route?.text)}
+                    className="navbar-links"
+                  >
+                    {route.path === "/" ? "Home" : route.path.substring(1)}
+                  </Link>
+                </li>
+              ))}
+              {isAuthenticated() && (
                 <li>
                   <Link className="navbar-links" onClick={handleLogout}>
                     Logout
                   </Link>
                 </li>
-              </>
-            )}
-          </ul>
+              )}
+            </ul>
+          ) : (
+            ""
+          )}
         </div>
 
         {/* Hamburger Icon */}
