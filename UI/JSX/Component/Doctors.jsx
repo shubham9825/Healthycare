@@ -23,7 +23,7 @@ const doctorDetails = [
   },
   {
     img: profile3,
-    name: "Dr. Jenny Wilson",
+    name: "Dr. John Wilson",
     title: "Endocrinologists",
     stars: "4.7",
     reviews: "450",

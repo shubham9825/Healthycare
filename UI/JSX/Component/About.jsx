@@ -1,5 +1,5 @@
 import React from "react";
-import Doctor from "../../Assets/Images/doctor-group.png";
+import Doctor from "../../Assets/Images/drgp.jpg";
 import SolutionStep from "../Common/SolutionStep.jsx";
 import "../../Assets/Styles/About.css";
 

@@ -14,6 +14,7 @@ import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import "../Assets/Styles/Navbar.css";
 import logo from "../Assets/Images/healthyCareLife.png";
 import { scroller } from "react-scroll";
+import MyAccount from "./Component/MyAccount.jsx";
 
 const Dashboard = lazy(() => retry(() => import("./Component/Dashboard.jsx")));
 const SignUp = lazy(() => retry(() => import("./Component/SignUp.jsx")));
@@ -82,6 +83,11 @@ const routes = [
     path: "/SignIn",
     component: SignIn,
     isAuth: false,
+  },
+  {
+    path: "/MyAccount",
+    component: MyAccount,
+    isAuth: true,
   },
 ];
 
