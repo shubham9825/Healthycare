@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { InformationCard } from "../Common/InformationCard.jsx";
 import {
   faHeartPulse,
@@ -6,6 +6,7 @@ import {
   faTooth,
 } from "@fortawesome/free-solid-svg-icons";
 import "../../Assets/Styles/Info.css";
+import { scroller } from "react-scroll";
 
 const cardDetails = [
   {
@@ -37,6 +38,16 @@ const cardDetails = [
 ];
 
 export const Services = () => {
+  useEffect(() => {
+    if (window.location.hash === "#/Services") {
+      scroller.scrollTo("Services", {
+        duration: 500,
+        delay: 0,
+        smooth: "easeInOutQuart",
+      });
+    }
+  }, []);
+
   return (
     <div className="info-section" id="Services">
       <div className="info-title-content">

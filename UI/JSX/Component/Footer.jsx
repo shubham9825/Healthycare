@@ -3,13 +3,7 @@ import { Link } from "react-router-dom";
 import "../../Assets/Styles/Footer.css";
 import logo from "../../Assets/Images/healthyCareLife.png";
 
-const services = [
-  "Emergency Care",
-  "Heart Disease",
-  "Dental Care",
-  "Prescription",
-  "Insights for doctors",
-];
+const services = ["Emergency Care", "Heart Disease", "Dental Care"];
 
 export const Footer = () => {
   return (
@@ -33,7 +27,7 @@ export const Footer = () => {
           <ul className="ft-list-items">
             {services.map((data, i) => (
               <li key={i}>
-                <Link href="/">{data}</Link>
+                <Link to="/Services">{data}</Link>
               </li>
             ))}
           </ul>
