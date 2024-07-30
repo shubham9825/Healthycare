@@ -11,6 +11,10 @@
   padding: 0.7rem !important;
 }
 
+body {
+  font-family: "Rubik", sans-serif;
+}
+
 /* logo */
 
 .ft-logo {
@@ -173,6 +177,12 @@
 
 .appointment-container button:disabled {
   background-color: #adb5bd;
+}
+
+/* Common css */
+.myColor {
+  color: black;
+  background-color: #3c9cf6;
 }
 
 @media (max-width: 576px) {
