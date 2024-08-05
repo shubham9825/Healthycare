@@ -25,9 +25,7 @@ const Appointment = lazy(() =>
 const ZoomAuthorize = lazy(() =>
   retry(() => import("./Component/ZoomAuthorize.jsx"))
 );
-const CreateMeeting = lazy(() =>
-  retry(() => import("./Component/CreateMeeting.jsx"))
-);
+
 const ZoomCallback = lazy(() =>
   retry(() => import("./Component/ZoomCallback.jsx"))
 );
@@ -49,24 +47,42 @@ const retry = (lazyComponent, attemptsLeft = 2) => {
 };
 
 const routes = [
-  { path: "/", component: <Dashboard />, isPublic: true },
-  { path: "/Appointment", component: <Appointment />, isAuth: true },
+  { path: "/", component: <Dashboard />, isPublic: true, isNavDisplay: true },
+  {
+    path: "/Appointment",
+    component: <Appointment />,
+    isAuth: true,
+    isNavDisplay: true,
+  },
   {
     path: "/Services",
     component: <Dashboard />,
     isPublic: true,
     text: "Services",
+    isNavDisplay: true,
   },
-  { path: "/About", component: <Dashboard />, isPublic: true, text: "About" },
+  {
+    path: "/About",
+    component: <Dashboard />,
+    isPublic: true,
+    text: "About",
+    isNavDisplay: true,
+  },
   {
     path: "/Reviews",
     component: <Dashboard />,
     isPublic: true,
     text: "Reviews",
+    isNavDisplay: true,
   },
-  { path: "/SignUp", component: <SignUp />, isAuth: false },
-  { path: "/SignIn", component: <SignIn />, isAuth: false },
-  { path: "/MyAccount", component: <MyAccount />, isAuth: true },
+  { path: "/SignUp", component: <SignUp />, isAuth: false, isNavDisplay: true },
+  { path: "/SignIn", component: <SignIn />, isAuth: false, isNavDisplay: true },
+  {
+    path: "/MyAccount",
+    component: <MyAccount />,
+    isAuth: true,
+    isNavDisplay: true,
+  },
   {
     path: "/zoom-authorize",
     component: <ZoomAuthorize />,
@@ -77,14 +93,9 @@ const routes = [
     path: "/callback",
     component: <ZoomCallback />,
     isAuth: true,
-    isNavDisplay: true,
-  },
-  {
-    path: "/create-meeting",
-    component: <CreateMeeting />,
-    isAuth: true,
     isNavDisplay: false,
   },
+  
 ];
 
 const isAuthenticated = () => !!localStorage.getItem("token");
@@ -159,7 +170,7 @@ export default function Routing() {
         {/* Desktop */}
         <ul className="navbar-items">
           {filteredAuthRoutes.map((route, index) =>
-            !route.isNavDisplay ? (
+            route.isNavDisplay ? (
               <li key={index}>
                 <Link
                   to={route.path}
@@ -191,7 +202,7 @@ export default function Routing() {
           {nav && (
             <ul className="mobile-navbar-links">
               {filteredAuthRoutes.map((route, index) =>
-                !route.isNavDisplay ? (
+                route.isNavDisplay ? (
                   <li key={index}>
                     <Link
                       to={route.path}

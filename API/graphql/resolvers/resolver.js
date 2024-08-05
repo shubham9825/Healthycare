@@ -6,6 +6,7 @@ import appointmentResolvers from './appointment.js';
 
 const resolvers = {
   Query: {
+    ...userResolvers.Query,
     ...departmentResolvers.Query,
     ...doctorResolvers.Query,
     ...appointmentResolvers.Query,
