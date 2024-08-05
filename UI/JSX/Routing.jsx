@@ -14,13 +14,22 @@ import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import "../Assets/Styles/Navbar.css";
 import logo from "../Assets/Images/healthyCareLife.png";
 import { scroller } from "react-scroll";
-import MyAccount from "./Component/MyAccount.jsx";
 
 const Dashboard = lazy(() => retry(() => import("./Component/Dashboard.jsx")));
+const MyAccount = lazy(() => retry(() => import("./Component/MyAccount.jsx")));
 const SignUp = lazy(() => retry(() => import("./Component/SignUp.jsx")));
 const SignIn = lazy(() => retry(() => import("./Component/SignIn.jsx")));
 const Appointment = lazy(() =>
   retry(() => import("./Component/Appointment.jsx"))
+);
+const ZoomAuthorize = lazy(() =>
+  retry(() => import("./Component/ZoomAuthorize.jsx"))
+);
+const CreateMeeting = lazy(() =>
+  retry(() => import("./Component/CreateMeeting.jsx"))
+);
+const ZoomCallback = lazy(() =>
+  retry(() => import("./Component/ZoomCallback.jsx"))
 );
 
 const retry = (lazyComponent, attemptsLeft = 2) => {
@@ -40,66 +49,52 @@ const retry = (lazyComponent, attemptsLeft = 2) => {
 };
 
 const routes = [
-  {
-    path: "/",
-    component: Dashboard,
-    isPublic: true,
-  },
-  {
-    path: "/Appointment",
-    component: Appointment,
-    isAuth: true,
-  },
+  { path: "/", component: <Dashboard />, isPublic: true },
+  { path: "/Appointment", component: <Appointment />, isAuth: true },
   {
     path: "/Services",
-    component: Dashboard,
+    component: <Dashboard />,
     isPublic: true,
     text: "Services",
   },
-  {
-    path: "/About",
-    component: Dashboard,
-    isPublic: true,
-    text: "About",
-  },
+  { path: "/About", component: <Dashboard />, isPublic: true, text: "About" },
   {
     path: "/Reviews",
-    component: Dashboard,
+    component: <Dashboard />,
     isPublic: true,
     text: "Reviews",
   },
+  { path: "/SignUp", component: <SignUp />, isAuth: false },
+  { path: "/SignIn", component: <SignIn />, isAuth: false },
+  { path: "/MyAccount", component: <MyAccount />, isAuth: true },
   {
-    path: "/Doctors",
-    component: Dashboard,
-    isPublic: true,
-    text: "Doctors",
-  },
-  {
-    path: "/SignUp",
-    component: SignUp,
-    isAuth: false,
-  },
-  {
-    path: "/SignIn",
-    component: SignIn,
-    isAuth: false,
-  },
-  {
-    path: "/MyAccount",
-    component: MyAccount,
+    path: "/zoom-authorize",
+    component: <ZoomAuthorize />,
     isAuth: true,
+    isNavDisplay: false,
+  },
+  {
+    path: "/callback",
+    component: <ZoomCallback />,
+    isAuth: true,
+    isNavDisplay: true,
+  },
+  {
+    path: "/create-meeting",
+    component: <CreateMeeting />,
+    isAuth: true,
+    isNavDisplay: false,
   },
 ];
 
-const isAuthenticated = () => {
-  return !!localStorage.getItem("token");
-};
+const isAuthenticated = () => !!localStorage.getItem("token");
 
-const ProtectedRoute = ({ element: Component, isAuth, ...rest }) => {
-  if (isAuth && !isAuthenticated()) {
+const ProtectedRoute = ({ element, isAuth }) => {
+  const isAuthenticated = !!localStorage.getItem("token");
+  if (isAuth && !isAuthenticated) {
     return <Navigate to="/signin" />;
   }
-  return <Component {...rest} />;
+  return element;
 };
 
 export default function Routing() {
@@ -107,9 +102,7 @@ export default function Routing() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const openNav = () => {
-    setNav(!nav);
-  };
+  const openNav = () => setNav(!nav);
 
   const filteredAuthRoutes = routes.filter((route) =>
     !route.isPublic
@@ -165,17 +158,21 @@ export default function Routing() {
 
         {/* Desktop */}
         <ul className="navbar-items">
-          {filteredAuthRoutes.map((route, index) => (
-            <li key={index}>
-              <Link
-                to={route.path}
-                className="navbar-links"
-                onClick={() => scrollToSection(route?.text)}
-              >
-                {route.path === "/" ? "Home" : route.path.substring(1)}
-              </Link>
-            </li>
-          ))}
+          {filteredAuthRoutes.map((route, index) =>
+            !route.isNavDisplay ? (
+              <li key={index}>
+                <Link
+                  to={route.path}
+                  className="navbar-links"
+                  onClick={() => scrollToSection(route?.text)}
+                >
+                  {route.path === "/" ? "Home" : route.path.substring(1)}
+                </Link>
+              </li>
+            ) : (
+              ""
+            )
+          )}
           {isAuthenticated() && (
             <li>
               <Link className="navbar-links" onClick={handleLogout}>
@@ -186,25 +183,28 @@ export default function Routing() {
         </ul>
 
         {/* Mobile */}
-
         <div className={`mobile-navbar ${nav ? "open-nav" : ""}`}>
           <div onClick={openNav} className="mobile-navbar-close">
             <FontAwesomeIcon icon={faXmark} className="hamb-icon" />
           </div>
 
-          {nav ? (
+          {nav && (
             <ul className="mobile-navbar-links">
-              {filteredAuthRoutes.map((route, index) => (
-                <li key={index}>
-                  <Link
-                    to={route.path}
-                    onClick={() => funMobile(route?.text)}
-                    className="navbar-links"
-                  >
-                    {route.path === "/" ? "Home" : route.path.substring(1)}
-                  </Link>
-                </li>
-              ))}
+              {filteredAuthRoutes.map((route, index) =>
+                !route.isNavDisplay ? (
+                  <li key={index}>
+                    <Link
+                      to={route.path}
+                      onClick={() => funMobile(route?.text)}
+                      className="navbar-links"
+                    >
+                      {route.path === "/" ? "Home" : route.path.substring(1)}
+                    </Link>
+                  </li>
+                ) : (
+                  ""
+                )
+              )}
               {isAuthenticated() && (
                 <li>
                   <Link className="navbar-links" onClick={handleLogout}>
@@ -213,8 +213,6 @@ export default function Routing() {
                 </li>
               )}
             </ul>
-          ) : (
-            ""
           )}
         </div>
 
@@ -236,7 +234,6 @@ export default function Routing() {
         }
       >
         <Routes>
-          <Route path="/" element={<Dashboard />} />
           {routes.map((route, index) => (
             <Route
               key={index}

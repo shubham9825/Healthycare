@@ -211,7 +211,7 @@ const Appointment = () => {
 
                   {formData?.date ? (
                     <CustomButton
-                      className="mt-2"
+                      className="mt-2 myColor"
                       type="submit"
                       textValue="Book"
                       loading={loading}
