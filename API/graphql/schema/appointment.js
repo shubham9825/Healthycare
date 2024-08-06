@@ -7,6 +7,12 @@ const appointmentSchema = gql`
     doctor: Doctor!
     date: String!
     time: String!
+    zoomMeeting: ZoomMeeting 
+  }
+
+  type ZoomMeeting {
+    join_url: String!
+    start_time: String!
   }
 
   input AppointmentInput {
@@ -17,7 +23,7 @@ const appointmentSchema = gql`
     doctorId: ID!
   }
 
- extend type Query {
+  extend type Query {
     getAppointments(userId: ID!): [Appointment!]!
   }
   

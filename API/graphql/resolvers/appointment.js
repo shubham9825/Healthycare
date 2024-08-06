@@ -2,6 +2,19 @@ import Appointment from '../../models/Appointment.js';
 import Department from '../../models/Department.js';
 import Doctor from '../../models/Doctor.js';
 import mongoose from 'mongoose';
+import axios from 'axios';
+import nodemailer from 'nodemailer';
+import moment from 'moment-timezone';
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  secure: true,
+  port: 465,
+  auth: {
+    user: "shubhsheliya211@gmail.com",
+    pass: "sicjlrufunqlnwqm",
+  },
+});
 
 const appointmentResolvers = {
   Query: {
@@ -19,11 +32,9 @@ const appointmentResolvers = {
     }
   },
   Mutation: {
-    createAppointment: async (_, { input }) => {
+    createAppointment: async (_, { input }, { req }) => {
       try {
         const { department, doctor, date, userId, doctorId } = input;
-
-        // Validate department and doctor names
         const departmentExists = await Department.exists({ name: department });
         if (!departmentExists) {
           throw new Error('Department not found');
@@ -33,26 +44,78 @@ const appointmentResolvers = {
         if (!doctorExists) {
           throw new Error('Doctor not found');
         }
-
-        // Extract date and time from the input date string
-        const dateObject = new Date(date);
-        const dateString = dateObject.toISOString().split('T')[0]; // YYYY-MM-DD
-        const timeString = dateObject.toISOString().split('T')[1].split('.')[0]; // HH:MM:SS
-
-        // Create a new appointment record
+        const userTimeZone = 'America/Toronto';
+        const dateObject = moment.tz(date, userTimeZone);
+        const utcDate = dateObject.utc();
         const appointment = new Appointment({
           user: new mongoose.Types.ObjectId(userId),
-          doctor:new  mongoose.Types.ObjectId(doctorId),
-          date: dateString,
-          time: timeString,
+          doctor: new mongoose.Types.ObjectId(doctorId),
+          date: utcDate.format('YYYY-MM-DD'),
+          time: utcDate.format('HH:mm:ss'),
         });
         await appointment.save();
 
-        // Fetch the full appointment details including user and doctor information
         const populatedAppointment = await Appointment.findById(appointment._id)
           .populate('user')
           .populate('doctor')
           .exec();
+        const accessToken = req.session.accessToken;
+        if (!accessToken) {
+          throw new Error('Zoom access token is missing');
+        }
+
+
+        const meetingData = {
+          topic: `Appointment with ${doctor}`,
+          type: 2,
+          start_time: utcDate.format(),
+          duration: 30,
+          timezone: "UTC",
+        };
+
+        const response = await axios.post(
+          "https://zoom.us/v2/users/me/meetings",
+          meetingData,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const meetingDetails = response.data;
+
+
+        const localTime = moment.utc(meetingDetails.start_time).tz(userTimeZone).format('MMMM DD, YYYY, HH:mm');
+
+        const mailOptions = {
+          from: "shubhsheliya211@gmail.com",
+          to: [populatedAppointment.user.email, populatedAppointment.doctor.email, 'Milapprajapati707070@gmail.com', 'subhamsheliya9825@gmail.com'],
+          subject: "New Zoom Meeting Scheduled",
+          text: `
+Hello,
+
+A new meeting has been scheduled for your upcoming appointment.
+
+Topic: ${meetingDetails.topic}
+Department : ${department}
+Start Time: ${localTime}
+Meeting URL: ${meetingDetails.join_url}
+Thank you for choosing HealthyCareLife.
+Best regards,
+HealthyCareLife Team
+`,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.error("Error sending email:", error);
+            throw new Error('Error sending email');
+          } else {
+            console.log("Email sent:", info.response);
+          }
+        });
 
         return {
           ...populatedAppointment._doc,
