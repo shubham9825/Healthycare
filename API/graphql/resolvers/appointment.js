@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import axios from 'axios';
 import nodemailer from 'nodemailer';
 import moment from 'moment-timezone';
+import UserProfile from '../../models/UserProfile.js';
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -108,12 +109,27 @@ HealthyCareLife Team
 `,
         };
 
-        transporter.sendMail(mailOptions, (error, info) => {
+        transporter.sendMail(mailOptions, async (error, info) => {
           if (error) {
             console.error("Error sending email:", error);
             throw new Error('Error sending email');
           } else {
             console.log("Email sent:", info.response);
+
+            // Store the activity in the user's profile
+            const activity = `Appointment with ${populatedAppointment.doctor.name} on ${dateObject.format('MMMM DD, YYYY')} at ${dateObject.format('HH:mm:ss')} - Zoom Meeting: ${meetingDetails.join_url}`;
+
+            try {
+              await UserProfile.findOneAndUpdate(
+                { userId: populatedAppointment.user._id },
+                { $push: { activity } },
+                { new: true, runValidators: true }
+              );
+            } catch (err) {
+              console.error("Error updating user profile activity:", err);
+              throw new Error('Error updating user profile activity');
+            }
+
           }
         });
 
