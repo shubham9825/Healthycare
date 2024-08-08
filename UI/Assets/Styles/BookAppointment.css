@@ -68,7 +68,7 @@
   border: 1px solid transparent;
   border-radius: 50px;
   outline: transparent;
-  background-color: #3c9cf6;
+  background-color: #005e63;
   font-size: 20px;
   font-family: "Rubik", sans-serif;
   letter-spacing: 0.8px;
@@ -76,9 +76,9 @@
   transition: all 0.4s ease;
 }
 .ba-appointment-btn:hover {
-  color: #3c9cf6;
+  color: #005e63;
   background-color: transparent;
-  border: 1px solid #3c9cf6;
+  border: 1px solid #005e63;
 }
 /* Responsive */
 @media screen and (max-width: 1000px) {

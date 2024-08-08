@@ -43,7 +43,7 @@ export const BookAppointment = () => {
           <p className="ba-checks ba-check-first" key={i}>
             <FontAwesomeIcon
               icon={faCircleCheck}
-              style={{ color: "#1E8FFD" }}
+              style={{ color: "#005e63" }}
             />{" "}
             {data}
           </p>
