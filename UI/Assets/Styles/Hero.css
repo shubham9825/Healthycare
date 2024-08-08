@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   gap: 24px;
-  background: linear-gradient(to right, #ecf2ff, #fbfcff);
+  background: linear-gradient(to right, #355b611a, #5866681f);
 }
 /* Text section */
 .text-section {
@@ -41,7 +41,7 @@
   border: 1px solid transparent;
   border-radius: 28px;
   outline: transparent;
-  background-color: #3c9cf6;
+  background-color: #005e63;
   font-size: 18px;
   font-family: "Rubik", sans-serif;
   letter-spacing: 0.8px;
@@ -49,9 +49,9 @@
   transition: all 0.4s ease;
 }
 .text-appointment-btn:hover {
-  color: #3c9cf6;
+  color: #005e63;
   background-color: transparent;
-  border: 1px solid #3c9cf6;
+  border: 1px solid #005e63;
 }
 .text-stats {
   margin-top: 40px;
@@ -71,7 +71,7 @@
 }
 .text-stats-container p:first-child {
   margin-bottom: 8px;
-  color: #3c9cf6;
+  color: #005e63;
   font-family: "Rubik", sans-serif;
   font-size: 32px;
   font-weight: bold;
@@ -97,7 +97,7 @@
   color: white;
   border: 3px solid white;
   border-radius: 50%;
-  background-color: #3c9cf6;
+  background-color: #005e63;
   position: fixed;
   bottom: 50px;
   right: 50px;

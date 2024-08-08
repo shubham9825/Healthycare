@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Spinner } from "reactstrap";
 
 export const CustomButton = ({
-  color = "primary",
+  color = "success",
   type = "submit",
   loading = false,
   textValue = "Click",

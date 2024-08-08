@@ -32,6 +32,19 @@ export const GET_DOCTOR = `query Doctors($departmentId: ID!) {
   }
 }`;
 
+export const GET_ACCOUNT_DETAILS = `query GetUserProfile($userId: ID!) {
+  getUserProfile(userId: $userId) {
+    activity
+    address
+    dob
+    emergencyName
+    emergencyPhNo
+    name
+    phoneNo
+    userId
+  }
+}`;
+
 export const CREATE_APPOINTMENT = `
 mutation Mutation($input: AppointmentInput!) {
   createAppointment(input: $input) {
@@ -44,5 +57,19 @@ mutation Mutation($input: AppointmentInput!) {
     user {
       id
     }
+  }
+}`;
+
+export const CREATE_USER_PROFILE = `
+mutation Mutation($input: UserProfileInput!) {
+  createUserProfile(input: $input) {
+    activity
+    address
+    dob
+    emergencyName
+    emergencyPhNo
+    name
+    phoneNo
+    userId
   }
 }`;

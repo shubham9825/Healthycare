@@ -181,8 +181,12 @@ body {
 
 /* Common css */
 .myColor {
-  color: black;
-  background-color: #3c9cf6;
+  color: white !important;
+  background-color: #005e63 !important;
+}
+
+.btn:hover {
+  background-color: #004b4e !important;
 }
 
 @media (max-width: 576px) {
