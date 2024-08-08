@@ -41,7 +41,6 @@ export const GET_ACCOUNT_DETAILS = `query GetUserProfile($userId: ID!) {
     emergencyPhNo
     name
     phoneNo
-    userId
   }
 }`;
 
@@ -70,6 +69,5 @@ mutation Mutation($input: UserProfileInput!) {
     emergencyPhNo
     name
     phoneNo
-    userId
   }
 }`;

@@ -14,7 +14,6 @@ const userProfileTypeDefs = gql`
   }
 
   input UserProfileInput {
-    userId: ID!
     name: String!
     dob: String!
     address: String!

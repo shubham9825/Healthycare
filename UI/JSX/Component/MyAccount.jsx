@@ -8,6 +8,8 @@ import { CustomButton } from "../Common/CustomButton.jsx";
 import { accountValidation } from "../utils/loginValidation.js";
 import { showToast } from "../utils/toastService.js";
 
+
+
 const initialState = {
   name: "",
   dob: "",
@@ -98,15 +100,14 @@ const MyAccount = () => {
     if (!hasError) {
       setLoading(true);
       try {
-        const cloneData = { ...formData };
-        cloneData.userId = loggedUser?.id;
+        const { userId, ...inputData } = formData;
 
         const res = await fetch("/graphql", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             query: CREATE_USER_PROFILE,
-            variables: { input: cloneData },
+            variables: { input: inputData },
           }),
         });
         const result = await res.json();

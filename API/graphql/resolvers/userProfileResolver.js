@@ -12,12 +12,22 @@ const userProfileResolver = {
     },
   },
   Mutation: {
-    createUserProfile: async (_, { input }) => {
+    createUserProfile: async (_, { input },{user}) => {
       try {
-        const newUserProfile = new UserProfile(input);
+        // Ensure that 'user.id' is available and valid
+        if (!user || !user.id) {
+          throw new Error('User not authenticated');
+        }
+
+        const newUserProfile = new UserProfile({
+          ...input,
+          userId: user.id
+        });
+
         await newUserProfile.save();
         return newUserProfile;
       } catch (error) {
+        console.error('Error creating user profile:', error);
         throw new Error('Error creating user profile');
       }
     },
@@ -26,7 +36,7 @@ const userProfileResolver = {
         const updatedUserProfile = await UserProfile.findOneAndUpdate(
           { userId },
           { $set: input },
-          { new: true, runValidators: true }
+          { new: true, runValidators: true, upsert:false }
         );
         if (!updatedUserProfile) {
           throw new Error('User profile not found');
