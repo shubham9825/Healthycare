@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import "../../Assets/Styles/MyAccount.css";
-import { CREATE_USER_PROFILE, GET_ACCOUNT_DETAILS } from "../Common/Schema.jsx";
+import {
+  CREATE_USER_PROFILE,
+  GET_ACCOUNT_DETAILS,
+  UPDATE_USER_PROFILE,
+} from "../Common/Schema.jsx";
 import { useSelector } from "react-redux";
 import { InputValidate } from "../Common/InputValidate.jsx";
 import { CustomButton } from "../Common/CustomButton.jsx";
 import { accountValidation } from "../utils/loginValidation.js";
 import { showToast } from "../utils/toastService.js";
-
-
 
 const initialState = {
   name: "",
@@ -39,6 +41,7 @@ const namingConversion = {
 const MyAccount = () => {
   const [formData, setFormData] = useState(formInitialState);
   const [errorMessage, setErrorMsg] = useState(initialState);
+  const [userUpdated, setUserUpdated] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const loggedUser = useSelector(
@@ -53,7 +56,9 @@ const MyAccount = () => {
     try {
       const res = await fetch("/graphql", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           query: GET_ACCOUNT_DETAILS,
           variables: { userId: loggedUser?.id },
@@ -61,6 +66,8 @@ const MyAccount = () => {
       });
       const result = await res.json();
       const userProfile = result?.data?.getUserProfile;
+
+      userProfile ? setUserUpdated(true) : setUserUpdated(false);
       userProfile && setFormData(userProfile);
     } catch (error) {
       showToast(error?.message, "error");
@@ -100,28 +107,41 @@ const MyAccount = () => {
     if (!hasError) {
       setLoading(true);
       try {
-        const { userId, ...inputData } = formData;
+        const { ...inputData } = formData;
 
-        const res = await fetch("/graphql", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            query: CREATE_USER_PROFILE,
-            variables: { input: inputData },
-          }),
-        });
+        let res;
+        if (userUpdated) {
+          res = await fetch("/graphql", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              query: UPDATE_USER_PROFILE,
+              variables: { input: inputData, userId: loggedUser?.id },
+            }),
+          });
+        } else {
+          res = await fetch("/graphql", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({
+              query: CREATE_USER_PROFILE,
+              variables: { input: inputData },
+            }),
+          });
+        }
         const result = await res.json();
         const userData = result?.data?.createUserProfile;
         if (userData) {
           setFormData(userData);
           showToast("User Profile Updated Successfully!", "success");
         } else {
-          showToast(result?.errors && result?.errors[0]?.message, "error");
-          console.log("error?.messagesadsd :>> ", result?.errors);
+          result?.errors && showToast(result?.errors[0]?.message, "error");
         }
         setLoading(false);
       } catch (error) {
-        console.log("error?.message :>> ", error?.message);
         setLoading(false);
         showToast(error?.message, "error");
       }
@@ -230,7 +250,7 @@ const MyAccount = () => {
                 </Row>
                 <CustomButton
                   type="submit"
-                  textValue={!formData?.name ? "Save Changes" : "Edit"}
+                  textValue={!userUpdated ? "Save Changes" : "Edit"}
                   className="mt-3 myColor"
                   loading={loading}
                   onClick={handleAccount}

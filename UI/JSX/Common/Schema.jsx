@@ -71,3 +71,16 @@ mutation Mutation($input: UserProfileInput!) {
     phoneNo
   }
 }`;
+
+export const UPDATE_USER_PROFILE = `
+mutation UpdateUserProfile($userId: ID!, $input: UserProfileInput!) {
+  updateUserProfile(userId: $userId, input: $input) {
+    activity
+    address
+    dob
+    emergencyName
+    emergencyPhNo
+    name
+    phoneNo
+  }
+}`;
