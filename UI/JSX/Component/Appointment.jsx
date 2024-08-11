@@ -60,7 +60,9 @@ const Appointment = () => {
     try {
       const res = await fetch("/graphql", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+         },
         body: JSON.stringify({ query: GET_DEPARTMENT }),
       });
       const result = await res.json();
@@ -80,7 +82,9 @@ const Appointment = () => {
     try {
       const res = await fetch("/graphql", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+         },
         body: JSON.stringify({
           query: GET_DOCTOR,
           variables: { departmentId: deptID?.id },
@@ -123,7 +127,9 @@ const Appointment = () => {
       setLoading(true);
       const res = await fetch("/graphql", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" ,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
         body: JSON.stringify({
           query: CREATE_APPOINTMENT,
           variables: { input: cloneFormData },

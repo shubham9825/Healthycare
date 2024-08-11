@@ -58,6 +58,7 @@ const MyAccount = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           query: GET_ACCOUNT_DETAILS,
@@ -113,7 +114,10 @@ const MyAccount = () => {
         if (userUpdated) {
           res = await fetch("/graphql", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+             },
+            
             body: JSON.stringify({
               query: UPDATE_USER_PROFILE,
               variables: { input: inputData, userId: loggedUser?.id },

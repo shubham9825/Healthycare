@@ -38,6 +38,17 @@ app.use(
 
 // JWT authentication middleware
 const authenticateToken = (req, res, next) => {
+  
+  const { query } = req.body;
+  const exclude = ['mutation Login', 'mutation Signup'];
+
+// Check if the operation is a mutation and specifically a login or signup mutation
+const shouldExclude = exclude.some(operation => query.includes(operation));
+
+if (query && shouldExclude) {
+    // Skip authentication for login or signup mutations
+    return next();
+}
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -55,7 +66,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Apply JWT middleware
-app.use(authenticateToken);
+ app.use('/graphql',authenticateToken);
 
 connectDB();
 

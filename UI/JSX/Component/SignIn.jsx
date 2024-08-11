@@ -54,7 +54,7 @@ const SignIn = () => {
       try {
         const res = await fetch("/graphql", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", },
           body: JSON.stringify({
             query: SIGN_IN,
             variables: { email: email, password: password },

@@ -55,7 +55,7 @@ const appointmentResolvers = {
           time: utcDate.format("HH:mm:ss"),
         });
         await appointment.save();
-
+        console.log('sess', req.session);
         const populatedAppointment = await Appointment.findById(appointment._id)
           .populate("user")
           .populate("doctor")

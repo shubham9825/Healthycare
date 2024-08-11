@@ -14,14 +14,15 @@ const userProfileResolver = {
   Mutation: {
     createUserProfile: async (_, { input },{user}) => {
       try {
+        console.log('user',user.userId);
         // Ensure that 'user.id' is available and valid
-        if (!user || !user.id) {
+        if (!user || !user.userId) {
           throw new Error('User not authenticated');
         }
 
         const newUserProfile = new UserProfile({
           ...input,
-          userId: user.id
+          userId: user.userId
         });
 
         await newUserProfile.save();
