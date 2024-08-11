@@ -1,32 +1,33 @@
-import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import session from 'express-session';
-import querystring from 'querystring';
-import axios from 'axios';
-import dotenv from 'dotenv';
-import connectDB from './Database/db.js';
-import baseSchema from './graphql/schema/index.js';
-import resolvers from './graphql/resolvers/resolver.js';
-import jwt from 'jsonwebtoken';
+import express from "express";
+import { ApolloServer } from "apollo-server-express";
+import bodyParser from "body-parser";
+import cors from "cors";
+import session from "express-session";
+import querystring from "querystring";
+import axios from "axios";
+import dotenv from "dotenv";
+import connectDB from "./Database/db.js";
+import baseSchema from "./graphql/schema/index.js";
+import resolvers from "./graphql/resolvers/resolver.js";
+import jwt from "jsonwebtoken";
 
-dotenv.config({ path: './env.env' });
+dotenv.config({ path: "./env.env" });
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 const ZOOM_CLIENT_ID = "tHhHGKZQaq0l4uShKzjCA";
 const ZOOM_CLIENT_SECRET = "Q9QxjLN1jmMEC12pIWQG9JO7ESPPEY6k";
 
-app.use(cors({
-  origin: "*",
-  methods: "GET,POST",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,POST",
+    credentials: true,
+  })
+);
 
 app.use(
   session({
@@ -38,27 +39,26 @@ app.use(
 
 // JWT authentication middleware
 const authenticateToken = (req, res, next) => {
-  
   const { query } = req.body;
-  const exclude = ['mutation Login', 'mutation Signup'];
+  const exclude = ["mutation Login", "mutation Signup"];
 
-// Check if the operation is a mutation and specifically a login or signup mutation
-const shouldExclude = exclude.some(operation => query.includes(operation));
+  // Check if the operation is a mutation and specifically a login or signup mutation
+  const shouldExclude = exclude.some((operation) => query.includes(operation));
 
-if (query && shouldExclude) {
+  if (query && shouldExclude) {
     // Skip authentication for login or signup mutations
     return next();
-}
+  }
   const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')[1];
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ message: 'Token not found' });
+    return res.status(401).json({ message: "Token not found" });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
-      return res.status(403).json({ message: 'Invalid token' });
+      return res.status(403).json({ message: "Invalid token" });
     }
     req.user = user; // Attach the user to the request
     next();
@@ -66,13 +66,18 @@ if (query && shouldExclude) {
 };
 
 // Apply JWT middleware
- app.use('/graphql',authenticateToken);
+app.use("/graphql", authenticateToken);
 
 connectDB();
 
 app.get("/oauth/authorize", (req, res) => {
-
-  const authorizationUrl = `https://zoom.us/oauth/authorize?client_id=tHhHGKZQaq0l4uShKzjCA&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback`;
+  const redirectUri =
+    process.env.NODE_ENV === "production"
+      ? "https://healthycare.onrender.com/callback"
+      : "http://localhost:8000/callback";
+  const authorizationUrl = `https://zoom.us/oauth/authorize?client_id=${ZOOM_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(
+    redirectUri
+  )}`;
 
   res.redirect(authorizationUrl);
 });
@@ -86,12 +91,16 @@ app.get("/callback", async (req, res) => {
   }
 
   try {
+    const redirectUri =
+      process.env.NODE_ENV === "production"
+        ? "https://healthycare.onrender.com/callback"
+        : "http://localhost:8000/callback";
     const response = await axios.post(
       "https://zoom.us/oauth/token",
       querystring.stringify({
         grant_type: "authorization_code",
         code: authorizationCode,
-        redirect_uri: "http://localhost:8000/callback",
+        redirect_uri: redirectUri,
       }),
       {
         auth: {
@@ -106,7 +115,12 @@ app.get("/callback", async (req, res) => {
 
     const accessToken = response.data.access_token;
     req.session.accessToken = accessToken;
-    res.redirect("http://localhost:3000/#/Appointment");
+
+    res.redirect(
+      process.env.NODE_ENV === "production"
+        ? "https://moonlit-lokum-0fecd1.netlify.app/#/Appointment"
+        : "http://localhost:3000/#/Appointment"
+    );
   } catch (error) {
     console.error(
       "Error getting access token:",
