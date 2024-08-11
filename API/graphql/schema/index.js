@@ -3,6 +3,7 @@ import typeDefs from './schema.js';
 import departmentSchema from './department.js';
 import doctorSchema from './doctor.js';
 import appointmentSchema from './appointment.js';
+import userProfileTypeDefs from './userProfileSchema.js';
 
 
 const baseSchema = gql`
@@ -20,6 +21,7 @@ export default [
   typeDefs,
   departmentSchema,
   doctorSchema,
-  appointmentSchema
+  appointmentSchema,
+  userProfileTypeDefs
 
 ];

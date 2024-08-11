@@ -119,8 +119,8 @@ const Appointment = () => {
     cloneFormData.doctorId = apiData?.doctors.find(
       (data) => data.name === cloneFormData?.doctor
     )?.id;
-
     try {
+      setLoading(true);
       const res = await fetch("/graphql", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -130,15 +130,16 @@ const Appointment = () => {
         }),
       });
       const result = await res.json();
+      setLoading(false);
       showToast("Your appointment has been booked!", "success");
       //   setApiData((prevState) => ({
       //     ...prevState,
       //     doctors: result?.data?.doctors,
       //   }));
     } catch (error) {
+      setLoading(false);
       showToast(error?.message, "error");
     }
-    console.log("userId :>> ", cloneFormData);
   };
 
   const checkValues = (obj) => {

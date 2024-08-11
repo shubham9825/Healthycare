@@ -19,6 +19,7 @@ app.use(express.static(path.resolve(__dirname, "public")));
 
 const appPort = process.env.UI_PORT;
 
+
 // listen the app on specific port
 app.listen(appPort, () => {
   console.log(`App started on port ${appPort}`);

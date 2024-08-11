@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 import connectDB from './Database/db.js';
 import baseSchema from './graphql/schema/index.js';
 import resolvers from './graphql/resolvers/resolver.js';
+import jwt from 'jsonwebtoken';
 
 dotenv.config({ path: './env.env' });
 
@@ -34,6 +35,27 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+// JWT authentication middleware
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: 'Token not found' });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: 'Invalid token' });
+    }
+    req.user = user; // Attach the user to the request
+    next();
+  });
+};
+
+// Apply JWT middleware
+app.use(authenticateToken);
 
 connectDB();
 
@@ -86,7 +108,9 @@ app.get("/callback", async (req, res) => {
 const server = new ApolloServer({
   typeDefs: baseSchema,
   resolvers,
-  context: ({ req }) => ({ req }),
+  context: ({ req }) => {
+    return { user: req.user };
+  },
 });
 async function startApolloServer() {
   await server.start();
