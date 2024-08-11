@@ -4,21 +4,28 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 const app = express();
 const path = require("path");
 
-const apiProxyTarget = "http://localhost:8000/graphql";
+const apiProxyTarget = "https://healthycare.onrender.com/graphql";
 require("dotenv").config({ path: "env.env" });
 
 // create api proxy
 if (apiProxyTarget) {
   app.use(
     "/graphql",
-    createProxyMiddleware({ target: apiProxyTarget, changeOrigin: false })
+    createProxyMiddleware({
+      target: apiProxyTarget,
+      changeOrigin: true,
+      pathRewrite: {
+        "^/graphql": "/graphql",
+      },
+      logLevel: "debug",
+      secure: true,
+    })
   );
 }
 
 app.use(express.static(path.resolve(__dirname, "public")));
 
 const appPort = process.env.UI_PORT;
-
 
 // listen the app on specific port
 app.listen(appPort, () => {

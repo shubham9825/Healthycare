@@ -11,7 +11,7 @@ const ZoomCallback = () => {
       if (code) {
         try {
           const response = await axios.get(
-            `http://localhost:8000/callback?code=${code}`
+            `https://healthycare.onrender.com/callback?code=${code}`
           );
           console.log("Access Token:", response.data.accessToken);
         } catch (error) {

@@ -1,12 +1,12 @@
-const path = require('path');
-const webpack = require('webpack');
+const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
-  mode: 'development',
-  entry: { app: './JSX/main.jsx' },
+  mode: "production",
+  entry: { app: "./JSX/main.jsx" },
   output: {
-    filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'public'),
+    filename: "[name].bundle.js",
+    path: path.resolve(__dirname, "public"),
   },
   module: {
     rules: [
@@ -14,35 +14,38 @@ module.exports = {
         test: /\.(jpe?g|png|gif|svg|ico)$/i,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
             options: {
-              name: '[name].[ext]',
-              outputPath: 'img/',
+              name: "[name].[ext]",
+              outputPath: "img/",
             },
           },
         ],
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: ["style-loader", "css-loader"],
       },
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
             presets: [
-              ['@babel/preset-env', {
-                targets: {
-                  ie: '11',
-                  edge: '15',
-                  safari: '10',
-                  firefox: '50',
-                  chrome: '49',
+              [
+                "@babel/preset-env",
+                {
+                  targets: {
+                    ie: "11",
+                    edge: "15",
+                    safari: "10",
+                    firefox: "50",
+                    chrome: "49",
+                  },
                 },
-              }],
-              '@babel/preset-react',
+              ],
+              "@babel/preset-react",
             ],
           },
         },
@@ -50,12 +53,12 @@ module.exports = {
     ],
   },
   optimization: {
-    splitChunks: { name: 'vendor', chunks: 'all' },
+    splitChunks: { name: "vendor", chunks: "all" },
   },
   plugins: [
     new webpack.DefinePlugin({
-      __isBrowser__: 'true',
+      __isBrowser__: "true",
     }),
   ],
-  devtool: 'source-map',
+  devtool: "source-map",
 };

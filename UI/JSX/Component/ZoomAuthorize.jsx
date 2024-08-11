@@ -3,7 +3,7 @@ import { CustomButton } from "../Common/CustomButton.jsx";
 
 const ZoomAuthorize = () => {
   const handleAuthorize = () => {
-    window.location.href = `http://localhost:8000/oauth/authorize`;
+    window.location.href = `https://healthycare.onrender.com/oauth/authorize`;
   };
 
   return (
