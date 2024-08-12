@@ -4,7 +4,7 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 const app = express();
 const path = require("path");
 
-const apiProxyTarget = "https://healthycare.onrender.com/graphql";
+//const apiProxyTarget = "https://healthycare.onrender.com/graphql";
 require("dotenv").config({ path: "env.env" });
 
 // create api proxy
