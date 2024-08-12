@@ -55,12 +55,13 @@ const appointmentResolvers = {
           time: utcDate.format("HH:mm:ss"),
         });
         await appointment.save();
-        console.log('sess', req.session);
+        console.log("sess", req.session);
         const populatedAppointment = await Appointment.findById(appointment._id)
           .populate("user")
           .populate("doctor")
           .exec();
         const accessToken = req.session.accessToken;
+        console.log("req.session.accessToken :>> ", req.session.accessToken);
         if (!accessToken) {
           throw new Error("Zoom access token is missing");
         }
