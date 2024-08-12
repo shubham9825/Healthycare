@@ -8,20 +8,20 @@ const path = require("path");
 require("dotenv").config({ path: "env.env" });
 
 // create api proxy
-if (apiProxyTarget) {
-  app.use(
-    "/graphql",
-    createProxyMiddleware({
-      target: apiProxyTarget,
-      changeOrigin: true,
-      pathRewrite: {
-        "^/graphql": "/graphql",
-      },
-      logLevel: "debug",
-      secure: true,
-    })
-  );
-}
+// if (apiProxyTarget) {
+//   app.use(
+//     "/graphql",
+//     createProxyMiddleware({
+//       target: apiProxyTarget,
+//       changeOrigin: true,
+//       pathRewrite: {
+//         "^/graphql": "/graphql",
+//       },
+//       logLevel: "debug",
+//       secure: true,
+//     })
+//   );
+// }
 
 app.use(express.static(path.resolve(__dirname, "public")));
 

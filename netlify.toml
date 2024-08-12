@@ -1,5 +1,0 @@
-[[redirects]]
-  from = "/graphql/*"
-  to = "https://healthycare.onrender.com/graphql/:splat"
-  status = 200
-  force = true
