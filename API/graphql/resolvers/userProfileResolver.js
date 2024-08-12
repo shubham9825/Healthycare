@@ -1,4 +1,4 @@
-import UserProfile from '../../models/UserProfile.js';
+import UserProfile from "../../models/UserProfile.js";
 
 const userProfileResolver = {
   Query: {
@@ -7,29 +7,29 @@ const userProfileResolver = {
         const userProfile = await UserProfile.findOne({ userId });
         return userProfile;
       } catch (error) {
-        throw new Error('Error fetching user profile');
+        throw new Error("Error fetching user profile");
       }
     },
   },
   Mutation: {
-    createUserProfile: async (_, { input },{user}) => {
+    createUserProfile: async (_, { input }, { req }) => {
       try {
-        console.log('user',user.userId);
+        const user = req?.user?.userId;
         // Ensure that 'user.id' is available and valid
-        if (!user || !user.userId) {
-          throw new Error('User not authenticated');
+        if (!user) {
+          throw new Error("User not authenticated");
         }
 
         const newUserProfile = new UserProfile({
           ...input,
-          userId: user.userId
+          userId: user,
         });
 
         await newUserProfile.save();
         return newUserProfile;
       } catch (error) {
-        console.error('Error creating user profile:', error);
-        throw new Error('Error creating user profile');
+        console.error("Error creating user profile:", error);
+        throw new Error("Error creating user profile");
       }
     },
     updateUserProfile: async (_, { userId, input }) => {
@@ -37,14 +37,14 @@ const userProfileResolver = {
         const updatedUserProfile = await UserProfile.findOneAndUpdate(
           { userId },
           { $set: input },
-          { new: true, runValidators: true, upsert:false }
+          { new: true, runValidators: true, upsert: false }
         );
         if (!updatedUserProfile) {
-          throw new Error('User profile not found');
+          throw new Error("User profile not found");
         }
         return updatedUserProfile;
       } catch (error) {
-        throw new Error('Error updating user profile');
+        throw new Error("Error updating user profile");
       }
     },
   },
