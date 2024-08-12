@@ -118,7 +118,7 @@ app.get("/callback", async (req, res) => {
 
     res.redirect(
       process.env.NODE_ENV === "production"
-        ? "https://moonlit-lokum-0fecd1.netlify.app/#/Appointment"
+        ? "https://tranquil-sherbet-cdcd10.netlify.app/#/Appointment"
         : "http://localhost:3000/#/Appointment"
     );
   } catch (error) {
