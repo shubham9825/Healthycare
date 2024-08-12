@@ -34,6 +34,10 @@ app.use(
     secret: "EXFXu7VYT-mA6NuGh68jGA",
     resave: false,
     saveUninitialized: true,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    },
   })
 );
 
@@ -134,7 +138,7 @@ const server = new ApolloServer({
   typeDefs: baseSchema,
   resolvers,
   context: ({ req }) => {
-    return { user: req.user };
+    return { req };
   },
 });
 async function startApolloServer() {
