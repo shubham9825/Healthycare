@@ -134,7 +134,7 @@ const server = new ApolloServer({
   typeDefs: baseSchema,
   resolvers,
   context: ({ req }) => {
-    return { req };
+    return { user: req.user };
   },
 });
 async function startApolloServer() {
