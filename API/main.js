@@ -10,6 +10,7 @@ import connectDB from "./Database/db.js";
 import baseSchema from "./graphql/schema/index.js";
 import resolvers from "./graphql/resolvers/resolver.js";
 import jwt from "jsonwebtoken";
+import MongoStore from "connect-mongo";
 
 dotenv.config({ path: "./env.env" });
 
@@ -33,10 +34,14 @@ app.use(
   session({
     secret: "EXFXu7VYT-mA6NuGh68jGA",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.URL_DB,
+      ttl: 14 * 24 * 60 * 60,
+    }),
     cookie: {
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 24,
     },
   })
 );
