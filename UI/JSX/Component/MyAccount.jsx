@@ -58,7 +58,7 @@ const MyAccount = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-           Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           query: GET_ACCOUNT_DETAILS,
@@ -68,8 +68,11 @@ const MyAccount = () => {
       const result = await res.json();
       const userProfile = result?.data?.getUserProfile;
 
+      const cloneProfile = { ...userProfile };
+      cloneProfile.dob = formatDate(cloneProfile.dob);
+
       userProfile ? setUserUpdated(true) : setUserUpdated(false);
-      userProfile && setFormData(userProfile);
+      userProfile && setFormData(cloneProfile);
     } catch (error) {
       showToast(error?.message, "error");
     }
@@ -114,10 +117,11 @@ const MyAccount = () => {
         if (userUpdated) {
           res = await fetch("/graphql", {
             method: "POST",
-            headers: { "Content-Type": "application/json",
+            headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${localStorage.getItem("token")}`,
-             },
-            
+            },
+
             body: JSON.stringify({
               query: UPDATE_USER_PROFILE,
               variables: { input: inputData, userId: loggedUser?.id },
@@ -137,10 +141,13 @@ const MyAccount = () => {
           });
         }
         const result = await res.json();
-        const userData = result?.data?.createUserProfile;
-        if (userData) {
-          setFormData(userData);
-          showToast("User Profile Updated Successfully!", "success");
+        const profileCreated = result?.data?.createUserProfile;
+        if (result) {
+          if (profileCreated) {
+            showToast("User Profile Created Successfully!", "success");
+          } else {
+            showToast("User Profile Updated Successfully!", "success");
+          }
         } else {
           result?.errors && showToast(result?.errors[0]?.message, "error");
         }
@@ -150,6 +157,19 @@ const MyAccount = () => {
         showToast(error?.message, "error");
       }
     }
+  };
+
+  const formatDate = (dt) => {
+    const timestampInMilliseconds =
+      typeof dt === "string" ? parseInt(dt, 10) : dt;
+
+    const date = new Date(timestampInMilliseconds);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    const formattedDate = `${year}-${month}-${day}`;
+
+    return formattedDate;
   };
 
   return (
@@ -266,15 +286,13 @@ const MyAccount = () => {
             <Card.Header>Recent Activity</Card.Header>
             <Card.Body>
               <ul className="list-group">
-                <li className="list-group-item">
-                  Appointment with Dr. Smith on July 20, 2024
-                </li>
-                <li className="list-group-item">
-                  Prescription refilled for John Doe on July 18, 2024
-                </li>
-                <li className="list-group-item">
-                  Lab results received on July 15, 2024
-                </li>
+                {formData?.activity?.map((data, index) => {
+                  return (
+                    <li className="list-group-item" key={index}>
+                      {data}
+                    </li>
+                  );
+                })}
               </ul>
             </Card.Body>
           </Card>
