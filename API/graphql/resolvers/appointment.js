@@ -60,7 +60,7 @@ const appointmentResolvers = {
           .populate("user")
           .populate("doctor")
           .exec();
-        const accessToken = req.session.accessToken;
+        const accessToken = req.session?.accessToken;
         console.log("req.session.accessToken :>> ", req.session.accessToken);
         if (!accessToken) {
           throw new Error("Zoom access token is missing");
