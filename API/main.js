@@ -14,6 +14,7 @@ import MongoStore from "connect-mongo";
 
 dotenv.config({ path: "./env.env" });
 
+app.set("trust proxy", 1);
 const app = express();
 
 app.use(bodyParser.json());
@@ -39,9 +40,11 @@ app.use(
       mongoUrl: process.env.URL_DB,
       ttl: 14 * 24 * 60 * 60,
     }),
+    proxy: true,
     cookie: {
       secure: process.env.NODE_ENV === "production",
       maxAge: 1000 * 60 * 60 * 24,
+      sameSite: "none",
     },
   })
 );
