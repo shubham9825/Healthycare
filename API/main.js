@@ -123,6 +123,7 @@ app.get("/callback", async (req, res) => {
     );
 
     const accessToken = response.data.access_token;
+    console.log("accessToken :>> ", accessToken);
     req.session.accessToken = accessToken;
 
     res.redirect(
