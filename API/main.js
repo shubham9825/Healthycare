@@ -14,8 +14,8 @@ import MongoStore from "connect-mongo";
 
 dotenv.config({ path: "./env.env" });
 
-app.set("trust proxy", 1);
 const app = express();
+app.set("trust proxy", 1);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
