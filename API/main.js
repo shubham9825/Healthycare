@@ -126,8 +126,9 @@ app.get("/callback", async (req, res) => {
     );
 
     const accessToken = response.data.access_token;
-    console.log("accessToken :>> ", accessToken);
+    console.log("accessToken :>> ", accessToken, req.session);
     req.session.accessToken = accessToken;
+    console.log("accessToken :>> ", accessToken, req.session);
 
     res.redirect(
       process.env.NODE_ENV === "production"
